@@ -2,43 +2,41 @@
 
 #include <cmath>
 
-Pivot::Pivot() : center_(), basis_(CreateIdentityMatrix<3>()) {
+Pivot::Pivot() : center_(), basis_(CreateIdentityMatrix<4>()) {
 }
 
-Pivot::Pivot(const Point3& center) : center_(center), basis_(CreateIdentityMatrix<3>()) {
+Pivot::Pivot(const Point4& center) : center_(center), basis_(CreateIdentityMatrix<4>()) {
 }
 
-Pivot::Pivot(const Point3& center, const Vector3& basis_vector_1, const Vector3& basis_vector_2,
-             const Vector3& basis_vector_3)
+Pivot::Pivot(const Point4& center, const Vector4& basis_vector_1, const Vector4& basis_vector_2,
+             const Vector4& basis_vector_3)
     : center_(center) {
-    for (unsigned i = 0; i < 3; ++i) {
+    for (unsigned i = 0; i < 4; ++i) {
         basis_(i, 0) = basis_vector_1(i, 0);
         basis_(i, 1) = basis_vector_2(i, 0);
         basis_(i, 2) = basis_vector_3(i, 0);
     }
+    basis_(3, 3) = 1;
 }
 
-Pivot::Pivot(const Point3& center, const Matrix3& basis) : center_(center), basis_(basis) {
+Pivot::Pivot(const Point4& center, const Matrix4& basis) : center_(center), basis_(basis) {
 }
 
-void Pivot::Move(const Vector3& vector) {
-    center_ = center_ + vector;
+void Pivot::Transform(const Matrix4& transformation_matrix) {
+    center_ = transformation_matrix * center_;
+    basis_ = transformation_matrix * basis_;
 }
 
-void Pivot::Rotate(const Matrix3& rotation_matrix) {
-    basis_ *= rotation_matrix;
+Point4 Pivot::ToGlobalCoordinates(const Point4& point) const {
+    return basis_.Transpose() * point + center_;
 }
 
-Point3 Pivot::ToGlobalCoordinates(const Point3& point) const {
-    return basis_.Transpose() * point.ToVector() + center_.ToVector();
+Point4 Pivot::ToLocalCoordinates(const Point4& point) const {
+    return basis_ * (point - center_);
 }
 
-Point3 Pivot::ToLocalCoordinates(const Point3& point) const {
-    return basis_ * (point.ToVector() - center_.ToVector());
-}
-
-Matrix3 CreateRotationMatrix(unsigned axis, long double angle) {
-    Matrix3 result;
+Matrix4 CreateRotationMatrix(unsigned axis, long double angle) {
+    Matrix4 result;
     if (axis == 0) {
         result(0, 0) = std::cos(angle);
         result(1, 0) = std::sin(angle);
@@ -58,5 +56,14 @@ Matrix3 CreateRotationMatrix(unsigned axis, long double angle) {
         result(2, 2) = std::cos(angle);
         result(0, 0) = 1;
     }
+    result(3, 3) = 1;
+    return result;
+}
+
+Matrix4 CreateMoveMatrix(long double dx, long double dy, long double dz) {
+    Matrix4 result = CreateIdentityMatrix<4>();
+    result(0, 3) = dx;
+    result(1, 3) = dy;
+    result(2, 3) = dz;
     return result;
 }

@@ -21,6 +21,14 @@ public:
         }
     }
 
+    long double& operator()(unsigned i) {
+        return data_[i][0];
+    }
+
+    long double operator()(unsigned i) const {
+        return data_[i][0];
+    }
+
     long double& operator()(unsigned i, unsigned j) {
         return data_[i][j];
     }
@@ -104,7 +112,7 @@ public:
         Matrix<M, N> result_matrix;
         for (unsigned i = 0; i < N; ++i) {
             for (unsigned j = 0; j < M; ++j) {
-                result_matrix(i, j) = (*this)(j, i);
+                result_matrix(j, i) = (*this)(i, j);
             }
         }
         return result_matrix;
@@ -155,12 +163,8 @@ Matrix<N, M> operator-(const Matrix<N, M>& matrix1, const Matrix<N, M>& matrix2)
     return result_matrix;
 }
 
-template <unsigned N>
-using SquareMatrix = Matrix<N, N>;
-
-using Matrix3 = Matrix<3, 3>;
-
-using Vector3 = Matrix<3, 1>;
+using Matrix4 = Matrix<4, 4>;
+using Vector4 = Matrix<4, 1>;
 
 template <unsigned N>
 Matrix<N, N> CreateIdentityMatrix() {

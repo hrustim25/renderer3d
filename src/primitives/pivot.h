@@ -6,21 +6,22 @@
 class Pivot {
 public:
     Pivot();
-    Pivot(const Point3& center);
-    Pivot(const Point3& center, const Vector3& basis_vector_1, const Vector3& basis_vector_2,
-          const Vector3& basis_vector_3);
-    Pivot(const Point3& center, const Matrix3& basis);
+    Pivot(const Point4& center);
+    Pivot(const Point4& center, const Vector4& basis_vector_1, const Vector4& basis_vector_2,
+          const Vector4& basis_vector_3);
+    Pivot(const Point4& center, const Matrix4& basis);
 
-    void Move(const Vector3& vector);
-    void Rotate(const Matrix3& rotation_matrix);
+    void Transform(const Matrix4& transformation_matrix);
 
-    Point3 ToGlobalCoordinates(const Point3& point) const;
-    Point3 ToLocalCoordinates(const Point3& point) const;
+    Point4 ToGlobalCoordinates(const Point4& point) const;
+    Point4 ToLocalCoordinates(const Point4& point) const;
 
 private:
-    Point3 center_;
-    Matrix3 basis_;
+    Point4 center_;
+    Matrix4 basis_;
 };
 
 // axis = 0, 1, 2 - XY, XZ, YZ rotation, respectively
-Matrix3 CreateRotationMatrix(unsigned axis, long double angle);
+Matrix4 CreateRotationMatrix(unsigned axis, long double angle);
+
+Matrix4 CreateMoveMatrix(long double dx, long double dy, long double dz);

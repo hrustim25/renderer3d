@@ -8,7 +8,7 @@ public:
     Camera(unsigned screen_width, unsigned screen_height);
     Camera(const Pivot& pivot, unsigned screen_width, unsigned screen_height);
 
-    Point3 ProjectToScreen(const Point3& point) const;
+    Point4 ProjectToScreen(const Point4& point) const;
 
     long double GetClipDistance() const;
     unsigned GetScreenWidth() const;

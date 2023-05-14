@@ -11,9 +11,9 @@ Camera::Camera(const Pivot& pivot, unsigned screen_width, unsigned screen_height
     : Pivot(pivot), screen_width_(screen_width), screen_height_(screen_height) {
 }
 
-Point3 Camera::ProjectToScreen(const Point3& point) const {
-    Point3 local_point = ToLocalCoordinates(point);
-    if (local_point.GetCoordinates()[2] == 0) {
+Point4 Camera::ProjectToScreen(const Point4& point) const {
+    Point4 local_point = ToLocalCoordinates(point);
+    if (local_point(2) == 0) {
         // return Point3(-1, -1, -1);
     }
     long double coefficient = GetClipDistance() / local_point(2);
@@ -22,7 +22,7 @@ Point3 Camera::ProjectToScreen(const Point3& point) const {
     if (new_x < 0 || new_x > GetScreenWidth() || new_y < 0 || new_y > GetScreenHeight()) {
         // return Point3(-1, -1, -1);
     }
-    return Point3(new_x, new_y, local_point(2));
+    return {new_x, new_y, local_point(2), 1};
 }
 
 long double Camera::GetClipDistance() const {

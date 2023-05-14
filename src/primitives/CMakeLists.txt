@@ -1,1 +1,1 @@
-add_library(primitives point.cpp pivot.cpp vertex.cpp)
+add_library(primitives pivot.cpp vertex.cpp edge.cpp)
