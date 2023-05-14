@@ -29,6 +29,39 @@ void Renderer::SetRotationMatrix(const Matrix4& matrix) {
     transformation_matrix_ = matrix;
 }
 
+Matrix4 GetKeyboardChange(sf::Keyboard::Key key) {
+    Matrix4 change_matrix = CreateIdentityMatrix<4>();
+    switch (key) {
+        case sf::Keyboard::W:
+            change_matrix = CreateMoveMatrix(0, 0, -0.5);
+            break;
+        case sf::Keyboard::S:
+            change_matrix = CreateMoveMatrix(0, 0, 0.5);
+            break;
+        case sf::Keyboard::A:
+            change_matrix = CreateMoveMatrix(0.5, 0, 0);
+            break;
+        case sf::Keyboard::D:
+            change_matrix = CreateMoveMatrix(-0.5, 0, 0);
+            break;
+        case sf::Keyboard::Left:
+            change_matrix = CreateRotationMatrix(1, -3.141592 / 120);
+            break;
+        case sf::Keyboard::Right:
+            change_matrix = CreateRotationMatrix(1, 3.141592 / 120);
+            break;
+        case sf::Keyboard::Up:
+            change_matrix = CreateRotationMatrix(2, -3.141592 / 120);
+            break;
+        case sf::Keyboard::Down:
+            change_matrix = CreateRotationMatrix(2, 3.141592 / 120);
+            break;
+        default:
+            break;
+    }
+    return change_matrix;
+}
+
 void Renderer::Start() {
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH_, SCREEN_HEIGHT_), "3D Renderer",
                             sf::Style::Close);
@@ -37,8 +70,12 @@ void Renderer::Start() {
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+            }
+            if (event.type == sf::Event::KeyPressed) {
+                camera_.Transform(GetKeyboardChange(event.key.code));
+            }
         }
         window.clear();
 

@@ -6,7 +6,7 @@ int main() {
     renderer.GetCamera().Transform(CreateMoveMatrix(100, -20, 0));
     renderer.GetCamera().Transform(CreateRotationMatrix(1, 3.141592 / 2));
 
-    Matrix4 rm = CreateRotationMatrix(1, 3.141592 / 120);
+    Matrix4 rm = CreateRotationMatrix(1, 3.141592 / 240);
     renderer.SetRotationMatrix(rm);
 
     Point4 points[3];

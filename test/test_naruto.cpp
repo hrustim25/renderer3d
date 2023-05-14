@@ -8,7 +8,7 @@ int main() {
     renderer.GetCamera().Transform(CreateMoveMatrix(50, -13, 0));
     renderer.GetCamera().Transform(CreateRotationMatrix(1, 3.141592 / 2));
 
-    Matrix4 rm = CreateRotationMatrix(1, 3.141592 / 120);
+    Matrix4 rm = CreateRotationMatrix(1, 3.141592 / 240);
     renderer.SetRotationMatrix(rm);
 
     ObjectReader obj_reader;
