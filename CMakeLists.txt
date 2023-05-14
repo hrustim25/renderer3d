@@ -4,6 +4,7 @@ project(renderer-3d)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED TRUE)
+set(CMAKE_BUILD_TYPE Release)
 
 find_package(SFML 2.5
     COMPONENTS
