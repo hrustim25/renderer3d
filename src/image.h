@@ -32,6 +32,8 @@ public:
 private:
     void ReadJpg(const std::string& filename);
 
+    void ReadPng(const std::string& filename);
+
     void ReadBmp(const std::string& filename);
 
     std::vector<std::vector<RGB>> data_;

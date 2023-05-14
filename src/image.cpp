@@ -2,6 +2,7 @@
 #include <stdexcept>
 
 #include <jpeglib.h>
+#include <png.h>
 
 #include "image.h"
 
@@ -61,6 +62,8 @@ void Image::ReadImage(const std::string& filename) {
     std::string file_type = filename.substr(last_dot_index);
     if (file_type == "jpg" || file_type == "jpeg") {
         ReadJpg("../models/" + filename);
+    } else if (file_type == "png") {
+        ReadPng("../models/" + filename);
     } else if (file_type == "bmp") {
         ReadBmp("../models/" + filename);
     }
@@ -72,7 +75,6 @@ void Image::ReadJpg(const std::string& filename) {
     FILE* infile = fopen(filename.c_str(), "rb");
 
     if (!infile) {
-        fclose(infile);
         return;
     }
 
@@ -108,6 +110,91 @@ void Image::ReadJpg(const std::string& filename) {
 
     (void)jpeg_finish_decompress(&cinfo);
     jpeg_destroy_decompress(&cinfo);
+    fclose(infile);
+}
+
+void Image::ReadPng(const std::string& filename) {
+    FILE* infile = fopen(filename.c_str(), "rb");
+
+    png_bytep* row_pointers = NULL;
+
+    png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    if (!png_ptr) {
+        fclose(infile);
+        return;
+    }
+
+    png_infop info_ptr = png_create_info_struct(png_ptr);
+    if (!info_ptr) {
+        png_destroy_read_struct(&png_ptr, NULL, NULL);
+        fclose(infile);
+        return;
+    }
+
+    if (setjmp(png_jmpbuf(png_ptr))) {
+        png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+        fclose(infile);
+        return;
+    }
+
+    png_init_io(png_ptr, infile);
+
+    png_read_info(png_ptr, info_ptr);
+
+    SetSize(png_get_image_width(png_ptr, info_ptr), png_get_image_height(png_ptr, info_ptr));
+    png_byte color_type = png_get_color_type(png_ptr, info_ptr);
+    png_byte bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+
+    if (bit_depth == 16) {
+        png_set_strip_16(png_ptr);
+    }
+
+    if (color_type == PNG_COLOR_TYPE_PALETTE) {
+        png_set_palette_to_rgb(png_ptr);
+    }
+
+    if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8) {
+        png_set_expand_gray_1_2_4_to_8(png_ptr);
+    }
+
+    if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
+        png_set_tRNS_to_alpha(png_ptr);
+    }
+
+    if (color_type == PNG_COLOR_TYPE_RGB || color_type == PNG_COLOR_TYPE_GRAY ||
+        color_type == PNG_COLOR_TYPE_PALETTE) {
+        png_set_filler(png_ptr, 0xFF, PNG_FILLER_AFTER);
+    }
+
+    if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA) {
+        png_set_gray_to_rgb(png_ptr);
+    }
+
+    png_read_update_info(png_ptr, info_ptr);
+
+    if (row_pointers) {
+        png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+        fclose(infile);
+        return;
+    }
+
+    row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * Height());
+    for (int y = 0; y < Height(); y++) {
+        row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png_ptr, info_ptr));
+    }
+
+    png_read_image(png_ptr, row_pointers);
+
+    for (int y = 0; y < Height(); ++y) {
+        png_bytep row_ptr = row_pointers[y];
+        for (int x = 0; x < Width(); ++x) {
+            png_bytep pixel_ptr = &row_ptr[x * 4];
+            SetPixel(y, x, RGB{.r = pixel_ptr[0], .g = pixel_ptr[1], .b = pixel_ptr[2]});
+        }
+    }
+    free(row_pointers);
+
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     fclose(infile);
 }
 
