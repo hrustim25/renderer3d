@@ -18,14 +18,14 @@ Currently available 5 test render targets: test_cube, test_triangles, test_inter
 
 ## Examples
 
-Interpolation example:
+### Interpolation example:
 ![Interpolation example](https://github.com/hrustim25/renderer3d/blob/main/examples/interpolation_example.gif)
 
-Teapot model example:
+### Teapot model example:
 ![Teapot example](https://github.com/hrustim25/renderer3d/blob/main/examples/teapot_example.gif)
 
-Naruto model and control example:
-![Naruto example](https://github.com/hrustim25/renderer3d/blob/main/examples/naruto_example.mkv)
+### Naruto model and control example:
+![Naruto example](https://github.com/hrustim25/renderer3d/blob/main/examples/naruto_example.gif)
 
 ## Copywrite
 
