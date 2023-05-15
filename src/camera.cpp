@@ -1,10 +1,14 @@
 #include "camera.h"
 
 Camera::Camera() : Pivot(), screen_width_(800), screen_height_(600) {
+    view_piramid_width_tan = (long double)screen_width_ / 2 / clip_distance_;
+    view_piramid_height_tan = (long double)screen_height_ / 2 / clip_distance_;
 }
 
 Camera::Camera(unsigned screen_width, unsigned screen_height)
     : Pivot(), screen_width_(screen_width), screen_height_(screen_height) {
+    view_piramid_width_tan = (long double)screen_width_ / 2 / clip_distance_;
+    view_piramid_height_tan = (long double)screen_height_ / 2 / clip_distance_;
 }
 
 Camera::Camera(const Pivot& pivot, unsigned screen_width, unsigned screen_height)
@@ -13,16 +17,14 @@ Camera::Camera(const Pivot& pivot, unsigned screen_width, unsigned screen_height
 
 Point4 Camera::ProjectToScreen(const Point4& point) const {
     Point4 local_point = ToLocalCoordinates(point);
-    if (local_point(2) == 0) {
-        // return Point3(-1, -1, -1);
-    }
     long double coefficient = GetClipDistance() / local_point(2);
     long double new_x = GetScreenWidth() / 2 + local_point(0) * coefficient;
     long double new_y = GetScreenHeight() / 2 - local_point(1) * coefficient;
-    if (new_x < 0 || new_x > GetScreenWidth() || new_y < 0 || new_y > GetScreenHeight()) {
-        // return Point3(-1, -1, -1);
-    }
     return {new_x, new_y, local_point(2), 1};
+}
+
+long double Camera::GetNearClipDistance() const {
+    return near_clip_distance_;
 }
 
 long double Camera::GetClipDistance() const {
@@ -35,4 +37,12 @@ unsigned Camera::GetScreenWidth() const {
 
 unsigned Camera::GetScreenHeight() const {
     return screen_height_;
+}
+
+long double Camera::GetViewPiramidWidthTan() const {
+    return view_piramid_width_tan;
+}
+
+long double Camera::GetViewPiramidHeightTan() const {
+    return view_piramid_height_tan;
 }

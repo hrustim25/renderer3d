@@ -71,7 +71,8 @@ void Rasterizer::FillRow(const Edge &left_edge, const Edge &right_edge, long lon
     long long point_position = cur_y * SCREEN_WIDTH_ + first_x;
     for (long long cur_x = first_x; cur_x < last_x; ++cur_x) {
         long double cur_z = 1.0L / cur_z_inv;
-        if (cur_z < zbuffer_[point_position] && cur_z > 0) {
+        if (cur_z < zbuffer_[point_position] && camera_.GetNearClipDistance() < cur_z &&
+            cur_z <= camera_.GetClipDistance()) {
             zbuffer_[point_position] = cur_z;
             if (is_texture_mode_) {
                 long long tex_x = NormalizeTextureCoordinate(cur_tex_x_over_z * cur_z) *
@@ -141,7 +142,46 @@ void Rasterizer::DrawOrientedTriangle(const Vertex &vertex1, const Vertex &verte
     }
 }
 
+bool Rasterizer::IsTriangleVisible(const Point4 &point1, const Point4 &point2,
+                                   const Point4 &point3) const {
+    if (point1(2) < camera_.GetNearClipDistance() && point2(2) < camera_.GetNearClipDistance() &&
+        point3(2) < camera_.GetNearClipDistance()) {
+        return false;
+    }
+    if (point1(2) > camera_.GetClipDistance() && point2(2) > camera_.GetClipDistance() &&
+        point3(2) > camera_.GetClipDistance()) {
+        return false;
+    }
+    if (point1(0) < -camera_.GetViewPiramidWidthTan() * point1(2) &&
+        point2(0) < -camera_.GetViewPiramidWidthTan() * point2(2) &&
+        point3(0) < -camera_.GetViewPiramidWidthTan() * point3(2)) {
+        return false;
+    }
+    if (point1(0) > camera_.GetViewPiramidWidthTan() * point1(2) &&
+        point2(0) > camera_.GetViewPiramidWidthTan() * point2(2) &&
+        point3(0) > camera_.GetViewPiramidWidthTan() * point3(2)) {
+        return false;
+    }
+    if (point1(1) < -camera_.GetViewPiramidHeightTan() * point1(2) &&
+        point2(1) < -camera_.GetViewPiramidHeightTan() * point2(2) &&
+        point3(1) < -camera_.GetViewPiramidHeightTan() * point3(2)) {
+        return false;
+    }
+    if (point1(1) > camera_.GetViewPiramidHeightTan() * point1(2) &&
+        point2(1) > camera_.GetViewPiramidHeightTan() * point2(2) &&
+        point3(1) > camera_.GetViewPiramidHeightTan() * point3(2)) {
+        return false;
+    }
+    return true;
+}
+
 void Rasterizer::DrawPolygon(const Vertex &vertex1, const Vertex &vertex2, const Vertex &vertex3) {
+    if (!IsTriangleVisible(camera_.ToLocalCoordinates(vertex1.GetPoint()),
+                           camera_.ToLocalCoordinates(vertex2.GetPoint()),
+                           camera_.ToLocalCoordinates(vertex3.GetPoint()))) {
+        return;
+    }
+
     Vertex vs[3];
     vs[0] = vertex1;
     vs[1] = vertex2;

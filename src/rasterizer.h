@@ -22,6 +22,8 @@ private:
 
     void DrawOrientedTriangle(const Vertex& vertex1, const Vertex& vertex2, const Vertex& vertex3);
 
+    bool IsTriangleVisible(const Point4& point1, const Point4& point2, const Point4& point3) const;
+
     const unsigned SCREEN_WIDTH_;
     const unsigned SCREEN_HEIGHT_;
     std::unique_ptr<uint32_t[]> color_buffer_;
