@@ -1,5 +1,7 @@
 #include "vertex.h"
 
+namespace rend {
+
 Vector4 Vertex::light_direction_ = {-1, 0, 0, 0};
 
 Vector4 Vertex::GetLightDirection() {
@@ -105,3 +107,5 @@ Vector4 Vertex::GetNormal() const {
 long double Vertex::GetBrightness() const {
     return brightness_;
 }
+
+}  // namespace rend

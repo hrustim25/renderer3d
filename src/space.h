@@ -5,6 +5,8 @@
 
 #include <vector>
 
+namespace rend {
+
 class Space {
 public:
     struct Polygon {
@@ -72,3 +74,5 @@ private:
     std::vector<Vector4> normals_;
     std::vector<Polygon> polygons_;
 };
+
+}  // namespace rend

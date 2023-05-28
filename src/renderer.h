@@ -4,6 +4,8 @@
 #include "space.h"
 #include "rasterizer.h"
 
+namespace rend {
+
 class Renderer {
 public:
     Renderer();
@@ -29,3 +31,5 @@ private:
 
     Matrix4 transformation_matrix_;
 };
+
+}  // namespace rend

@@ -1,5 +1,7 @@
 #include "camera.h"
 
+namespace rend {
+
 Camera::Camera() : Pivot(), screen_width_(800), screen_height_(600) {
     view_piramid_width_tan = (long double)screen_width_ / 2 / clip_distance_;
     view_piramid_height_tan = (long double)screen_height_ / 2 / clip_distance_;
@@ -46,3 +48,5 @@ long double Camera::GetViewPiramidWidthTan() const {
 long double Camera::GetViewPiramidHeightTan() const {
     return view_piramid_height_tan;
 }
+
+}  // namespace rend

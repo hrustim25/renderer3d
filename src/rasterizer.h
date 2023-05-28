@@ -6,6 +6,8 @@
 
 #include <memory>
 
+namespace rend {
+
 class Rasterizer {
 public:
     Rasterizer(unsigned int screen_width, unsigned int screen_height, const Camera& camera);
@@ -32,3 +34,5 @@ private:
 
     bool is_texture_mode_ = false;
 };
+
+}  // namespace rend

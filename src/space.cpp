@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+namespace rend {
+
 Space::Space() {
 }
 
@@ -157,3 +159,5 @@ size_t Space::GetNormalCount() const {
 size_t Space::GetPolygonCount() const {
     return polygons_.size();
 }
+
+}  // namespace rend

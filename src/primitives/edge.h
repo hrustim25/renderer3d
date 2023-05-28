@@ -2,6 +2,8 @@
 
 #include "vertex.h"
 
+namespace rend {
+
 class Edge {
 public:
     Edge(Vertex v_min, Vertex v_max);
@@ -41,3 +43,5 @@ private:
     long double cur_brightness_ = 0;
     long double brightness_step_ = 0;
 };
+
+}  // namespace rend

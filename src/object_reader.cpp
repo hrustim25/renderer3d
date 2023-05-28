@@ -2,6 +2,8 @@
 
 #include <fstream>
 
+namespace rend {
+
 ObjectReader::ObjectReader() {
 }
 
@@ -112,3 +114,5 @@ Object3d ObjectReader::ReadObjFile(const std::string& filename, Space& space) co
     }
     return result;
 }
+
+}  // namespace rend

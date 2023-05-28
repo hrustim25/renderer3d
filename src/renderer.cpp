@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+namespace rend {
+
 Renderer::Renderer() : rasterizer_(k_screen_width, k_screen_height, camera_) {
 }
 
@@ -117,3 +119,5 @@ void Renderer::Start() {
         window.display();
     }
 }
+
+}  // namespace rend

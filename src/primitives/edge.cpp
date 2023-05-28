@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+namespace rend {
+
 Edge::Edge(Vertex v_min, Vertex v_max) : min_y_(v_min.GetPoint()(1)), max_y_(v_max.GetPoint()(1)) {
     long double dy = max_y_ - min_y_;
 
@@ -92,3 +94,5 @@ void Edge::Step() {
     }
     cur_brightness_ += brightness_step_;
 }
+
+}  // namespace rend

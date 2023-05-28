@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+namespace rend {
+
 Pivot::Pivot() : center_(), basis_(CreateIdentityMatrix<4>()) {
 }
 
@@ -67,3 +69,5 @@ Matrix4 CreateMoveMatrix(long double dx, long double dy, long double dz) {
     result(2, 3) = dz;
     return result;
 }
+
+}  // namespace rend

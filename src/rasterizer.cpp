@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+namespace rend {
+
 Rasterizer::Rasterizer(unsigned int screen_width, unsigned int screen_height, const Camera &camera)
     : k_screen_width(screen_width), k_screen_height(screen_height), camera_(camera) {
     color_buffer_ = std::make_unique<uint32_t[]>(screen_width * screen_height);
@@ -204,3 +206,5 @@ void Rasterizer::DrawPolygon(const Vertex &vertex1, const Vertex &vertex2, const
 const uint32_t *Rasterizer::GetPixelArray() const {
     return color_buffer_.get();
 }
+
+}  // namespace rend

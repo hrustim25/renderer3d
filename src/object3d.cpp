@@ -1,5 +1,7 @@
 #include "object3d.h"
 
+namespace rend {
+
 Object3d::Object3d() {
 }
 
@@ -13,3 +15,5 @@ void Object3d::AddVertexIndex(int index) {
 int Object3d::GetVertexIndex(int position) const {
     return vertex_indexes_[position];
 }
+
+}  // namespace rend

@@ -6,6 +6,8 @@
 
 #include "image.h"
 
+namespace rend {
+
 uint32_t RGB::GetColors() const {
     uint32_t result = r;
     result = (result << 8) + g;
@@ -232,3 +234,5 @@ void Image::ReadBmp(const std::string& filename) {
     delete[] data;
     fclose(infile);
 }
+
+}  // namespace rend

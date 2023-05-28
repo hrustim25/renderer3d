@@ -3,16 +3,16 @@
 #include "object_reader.h"
 
 int main() {
-    Renderer renderer;
+    rend::Renderer renderer;
 
-    renderer.GetCamera().Transform(CreateMoveMatrix(0.5, 0, 0));
-    renderer.GetCamera().Transform(CreateRotationMatrix(1, 3.141592 / 2));
+    renderer.GetCamera().Transform(rend::CreateMoveMatrix(0.5, 0, 0));
+    renderer.GetCamera().Transform(rend::CreateRotationMatrix(1, 3.141592 / 2));
 
-    Matrix4 rm = CreateRotationMatrix(1, 3.141592 / 240);
+    rend::Matrix4 rm = rend::CreateRotationMatrix(1, 3.141592 / 240);
     renderer.SetRotationMatrix(rm);
 
-    ObjectReader obj_reader;
-    Object3d obj = obj_reader.ReadObject("../models/utah-teapot.obj", renderer.GetSpace());
+    rend::ObjectReader obj_reader;
+    rend::Object3d obj = obj_reader.ReadObject("../models/utah-teapot.obj", renderer.GetSpace());
 
     renderer.SetFillMode(true);
 

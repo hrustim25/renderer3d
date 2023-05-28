@@ -3,6 +3,8 @@
 #include "point.h"
 #include "../image.h"
 
+namespace rend {
+
 class Vertex {
 public:
     Vertex();
@@ -44,3 +46,5 @@ private:
 
     static Vector4 light_direction_;
 };
+
+}  // namespace rend

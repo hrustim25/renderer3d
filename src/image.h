@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 
+namespace rend {
+
 struct RGB {
     int r, g, b;
 
@@ -38,3 +40,5 @@ private:
 
     std::vector<std::vector<RGB>> data_;
 };
+
+}  // namespace rend

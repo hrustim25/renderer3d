@@ -2,6 +2,8 @@
 
 #include "point.h"
 
+namespace rend {
+
 // Coordinate system orthnormal basis and center global coordinates
 class Pivot {
 public:
@@ -25,3 +27,5 @@ private:
 Matrix4 CreateRotationMatrix(unsigned int axis, long double angle);
 
 Matrix4 CreateMoveMatrix(long double dx, long double dy, long double dz);
+
+}  // namespace rend

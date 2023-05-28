@@ -4,6 +4,8 @@
 
 #include <vector>
 
+namespace rend {
+
 class Object3d : public Pivot {
 public:
     Object3d();
@@ -16,3 +18,5 @@ public:
 private:
     std::vector<int> vertex_indexes_;
 };
+
+}  // namespace rend

@@ -2,6 +2,8 @@
 
 #include "primitives/pivot.h"
 
+namespace rend {
+
 class Camera : public Pivot {
 public:
     Camera();
@@ -25,3 +27,5 @@ private:
     long double view_piramid_width_tan;
     long double view_piramid_height_tan;
 };
+
+}  // namespace rend

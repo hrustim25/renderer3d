@@ -3,6 +3,8 @@
 #include <array>
 #include <stdexcept>
 
+namespace rend {
+
 template <unsigned int N, unsigned int M>
 class Matrix {
 public:
@@ -174,3 +176,5 @@ Matrix<N, N> CreateIdentityMatrix() {
     }
     return result;
 }
+
+}  // namespace rend

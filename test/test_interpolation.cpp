@@ -1,15 +1,15 @@
 #include "renderer.h"
 
 int main() {
-    Renderer renderer;
+    rend::Renderer renderer;
 
-    renderer.GetCamera().Transform(CreateMoveMatrix(100, -20, 0));
-    renderer.GetCamera().Transform(CreateRotationMatrix(1, 3.141592 / 2));
+    renderer.GetCamera().Transform(rend::CreateMoveMatrix(100, -20, 0));
+    renderer.GetCamera().Transform(rend::CreateRotationMatrix(1, 3.141592 / 2));
 
-    Matrix4 rm = CreateRotationMatrix(1, 3.141592 / 240);
+    rend::Matrix4 rm = rend::CreateRotationMatrix(1, 3.141592 / 240);
     renderer.SetRotationMatrix(rm);
 
-    Point4 points[3];
+    rend::Point4 points[3];
     points[0] = {0, 50, 0, 1};
     points[1] = {30, 0, 0, 1};
     points[2] = {-30, 0, 0, 1};
@@ -18,7 +18,7 @@ int main() {
         renderer.GetSpace().AddPoint(points[i]);
     }
 
-    Vertex vert;
+    rend::Vertex vert;
     vert.SetColor(255, 0, 0, 255);
     renderer.GetSpace().AddColor(vert.GetColor());
     vert.SetColor(0, 255, 0, 255);

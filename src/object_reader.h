@@ -3,6 +3,8 @@
 #include "object3d.h"
 #include "space.h"
 
+namespace rend {
+
 class ObjectReader {
 public:
     ObjectReader();
@@ -12,3 +14,5 @@ public:
 private:
     Object3d ReadObjFile(const std::string& filename, Space& space) const;
 };
+
+}  // namespace rend
