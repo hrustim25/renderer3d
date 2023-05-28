@@ -5,13 +5,13 @@ Camera::Camera() : Pivot(), screen_width_(800), screen_height_(600) {
     view_piramid_height_tan = (long double)screen_height_ / 2 / clip_distance_;
 }
 
-Camera::Camera(unsigned screen_width, unsigned screen_height)
+Camera::Camera(unsigned int screen_width, unsigned int screen_height)
     : Pivot(), screen_width_(screen_width), screen_height_(screen_height) {
     view_piramid_width_tan = (long double)screen_width_ / 2 / clip_distance_;
     view_piramid_height_tan = (long double)screen_height_ / 2 / clip_distance_;
 }
 
-Camera::Camera(const Pivot& pivot, unsigned screen_width, unsigned screen_height)
+Camera::Camera(const Pivot& pivot, unsigned int screen_width, unsigned int screen_height)
     : Pivot(pivot), screen_width_(screen_width), screen_height_(screen_height) {
 }
 
@@ -31,11 +31,11 @@ long double Camera::GetClipDistance() const {
     return clip_distance_;
 }
 
-unsigned Camera::GetScreenWidth() const {
+unsigned int Camera::GetScreenWidth() const {
     return screen_width_;
 }
 
-unsigned Camera::GetScreenHeight() const {
+unsigned int Camera::GetScreenHeight() const {
     return screen_height_;
 }
 

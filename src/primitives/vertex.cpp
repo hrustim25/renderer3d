@@ -74,7 +74,7 @@ uint32_t Vertex::GetColor() const {
     return color_;
 }
 
-uint8_t Vertex::GetColorPart(unsigned position) const {
+uint8_t Vertex::GetColorPart(unsigned int position) const {
     uint32_t result = color_;
     result <<= position * 8;
     result >>= 24;

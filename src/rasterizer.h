@@ -8,7 +8,7 @@
 
 class Rasterizer {
 public:
-    Rasterizer(unsigned screen_width, unsigned screen_height, const Camera& camera);
+    Rasterizer(unsigned int screen_width, unsigned int screen_height, const Camera& camera);
 
     void SetFillMode(bool is_texture_mode);
 
@@ -24,8 +24,8 @@ private:
 
     bool IsTriangleVisible(const Point4& point1, const Point4& point2, const Point4& point3) const;
 
-    const unsigned SCREEN_WIDTH_;
-    const unsigned SCREEN_HEIGHT_;
+    const unsigned int k_screen_width;
+    const unsigned int k_screen_height;
     std::unique_ptr<uint32_t[]> color_buffer_;
     std::unique_ptr<long double[]> zbuffer_;
     const Camera& camera_;

@@ -87,22 +87,22 @@ Object3d ObjectReader::ReadObjFile(const std::string& filename, Space& space) co
             std::vector<std::string> vertex1 = ParseString(arg_array[1], "/");
             std::vector<std::string> vertex2 = ParseString(arg_array[2], "/");
             std::vector<std::string> vertex3 = ParseString(arg_array[3], "/");
-            unsigned vertex1_index = std::stoul(vertex1[0]) - 1 + init_point_count;
-            unsigned vertex2_index = std::stoul(vertex2[0]) - 1 + init_point_count;
-            unsigned vertex3_index = std::stoul(vertex3[0]) - 1 + init_point_count;
+            unsigned int vertex1_index = std::stoul(vertex1[0]) - 1 + init_point_count;
+            unsigned int vertex2_index = std::stoul(vertex2[0]) - 1 + init_point_count;
+            unsigned int vertex3_index = std::stoul(vertex3[0]) - 1 + init_point_count;
             space.AddPolygon(vertex1_index, vertex2_index, vertex3_index);
             space.SetPolygonTexture(space.GetPolygonCount() - 1, space.GetTextureCount() - 1);
             if (vertex1.size() >= 2 && vertex1[1].size() > 0) {
-                unsigned tex_coords1_index = std::stoul(vertex1[1]) - 1 + init_tex_coords_count;
-                unsigned tex_coords2_index = std::stoul(vertex2[1]) - 1 + init_tex_coords_count;
-                unsigned tex_coords3_index = std::stoul(vertex3[1]) - 1 + init_tex_coords_count;
+                unsigned int tex_coords1_index = std::stoul(vertex1[1]) - 1 + init_tex_coords_count;
+                unsigned int tex_coords2_index = std::stoul(vertex2[1]) - 1 + init_tex_coords_count;
+                unsigned int tex_coords3_index = std::stoul(vertex3[1]) - 1 + init_tex_coords_count;
                 space.SetPolygonTextureCoords(space.GetPolygonCount() - 1, tex_coords1_index,
                                               tex_coords2_index, tex_coords3_index);
             }
             if (vertex1.size() == 3) {
-                unsigned normal1_index = std::stoul(vertex1[2]) - 1 + init_normal_count;
-                unsigned normal2_index = std::stoul(vertex2[2]) - 1 + init_normal_count;
-                unsigned normal3_index = std::stoul(vertex3[2]) - 1 + init_normal_count;
+                unsigned int normal1_index = std::stoul(vertex1[2]) - 1 + init_normal_count;
+                unsigned int normal2_index = std::stoul(vertex2[2]) - 1 + init_normal_count;
+                unsigned int normal3_index = std::stoul(vertex3[2]) - 1 + init_normal_count;
                 space.SetPolygonNormals(space.GetPolygonCount() - 1, normal1_index, normal2_index,
                                         normal3_index);
             }

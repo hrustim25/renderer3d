@@ -22,7 +22,7 @@ public:
 
     Point4 GetPoint() const;
     uint32_t GetColor() const;
-    uint8_t GetColorPart(unsigned position) const;
+    uint8_t GetColorPart(unsigned int position) const;
     Vector4 GetColorVector() const;
     long double GetTextureX() const;
     long double GetTextureY() const;

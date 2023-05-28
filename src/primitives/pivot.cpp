@@ -11,7 +11,7 @@ Pivot::Pivot(const Point4& center) : center_(center), basis_(CreateIdentityMatri
 Pivot::Pivot(const Point4& center, const Vector4& basis_vector_1, const Vector4& basis_vector_2,
              const Vector4& basis_vector_3)
     : center_(center) {
-    for (unsigned i = 0; i < 4; ++i) {
+    for (unsigned int i = 0; i < 4; ++i) {
         basis_(i, 0) = basis_vector_1(i, 0);
         basis_(i, 1) = basis_vector_2(i, 0);
         basis_(i, 2) = basis_vector_3(i, 0);
@@ -35,7 +35,7 @@ Point4 Pivot::ToLocalCoordinates(const Point4& point) const {
     return basis_ * (point - center_);
 }
 
-Matrix4 CreateRotationMatrix(unsigned axis, long double angle) {
+Matrix4 CreateRotationMatrix(unsigned int axis, long double angle) {
     Matrix4 result;
     if (axis == 0) {
         result(0, 0) = std::cos(angle);

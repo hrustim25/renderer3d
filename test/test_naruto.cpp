@@ -16,7 +16,7 @@ int main() {
 
     renderer.SetFillMode(true);
 
-    for (unsigned i = 0; i < renderer.GetSpace().GetPolygonCount(); ++i) {
+    for (unsigned int i = 0; i < renderer.GetSpace().GetPolygonCount(); ++i) {
         renderer.GetSpace().SetPolygonTexture(i, renderer.GetSpace().GetPolygon(i).texture_index);
     }
 

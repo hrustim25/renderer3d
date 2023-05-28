@@ -21,10 +21,10 @@ int main() {
         }
     }
 
-    for (unsigned i = 0; i < 8; ++i) {
+    for (unsigned int i = 0; i < 8; ++i) {
         renderer.GetSpace().AddPoint(points[i]);
     }
-    for (unsigned i = 0; i < 12; ++i) {
+    for (unsigned int i = 0; i < 12; ++i) {
         uint32_t color = std::rand() % 256;
         color = (color << 8) + std::rand() % 256;
         color = (color << 8) + std::rand() % 256;

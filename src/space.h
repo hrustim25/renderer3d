@@ -8,51 +8,52 @@
 class Space {
 public:
     struct Polygon {
-        unsigned point_indexes[3];
-        unsigned colors_indexes[3];
-        unsigned texture_index;
-        unsigned tex_coords_indexes[3];
-        unsigned normal_indexes[3];
+        unsigned int point_indexes[3];
+        unsigned int colors_indexes[3];
+        unsigned int texture_index;
+        unsigned int tex_coords_indexes[3];
+        unsigned int normal_indexes[3];
     };
 
 public:
     Space();
-    Space(unsigned expected_size);
+    Space(unsigned int expected_size);
 
     void AddPoint(const Point4& point);
     void AddColor(uint32_t color);
     void AddTextureCoords(long double tex_x, long double tex_y);
     void AddTexture(const Image& texture);
     void AddNormal(const Vector4& normal);
-    void AddPolygon(unsigned point_index1, unsigned point_index2, unsigned point_index3);
+    void AddPolygon(unsigned int point_index1, unsigned int point_index2,
+                    unsigned int point_index3);
 
-    void SetPolygonColors(unsigned polygon_index, unsigned color_index1, unsigned color_index2,
-                          unsigned color_index3);
-    void SetPolygonTextureCoords(unsigned polygon_index, unsigned tex_coords_index1,
-                                 unsigned tex_coords_index2, unsigned tex_coords_index3);
-    void SetPolygonTexture(unsigned polygon_index, unsigned texture_index);
-    void SetPolygonNormals(unsigned polygon_index, unsigned normal_index1, unsigned normal_index2,
-                           unsigned normal_index3);
+    void SetPolygonColors(unsigned int polygon_index, unsigned int color_index1,
+                          unsigned int color_index2, unsigned int color_index3);
+    void SetPolygonTextureCoords(unsigned int polygon_index, unsigned int tex_coords_index1,
+                                 unsigned int tex_coords_index2, unsigned int tex_coords_index3);
+    void SetPolygonTexture(unsigned int polygon_index, unsigned int texture_index);
+    void SetPolygonNormals(unsigned int polygon_index, unsigned int normal_index1,
+                           unsigned int normal_index2, unsigned int normal_index3);
 
-    void SetPoint(unsigned index, const Point4& point);
-    Point4 GetPoint(unsigned index) const;
+    void SetPoint(unsigned int index, const Point4& point);
+    Point4 GetPoint(unsigned int index) const;
 
-    void SetColor(unsigned index, uint32_t color);
-    uint32_t GetColor(unsigned index) const;
+    void SetColor(unsigned int index, uint32_t color);
+    uint32_t GetColor(unsigned int index) const;
 
-    void SetTexCoords(unsigned index, long double tex_x, long double tex_y);
-    std::pair<long double, long double> GetTexCoords(unsigned index) const;
+    void SetTexCoords(unsigned int index, long double tex_x, long double tex_y);
+    std::pair<long double, long double> GetTexCoords(unsigned int index) const;
 
-    void SetTexture(unsigned index, const Image& texture);
-    const Image* GetTexturePointer(unsigned index) const;
+    void SetTexture(unsigned int index, const Image& texture);
+    const Image* GetTexturePointer(unsigned int index) const;
 
-    void SetNormal(unsigned index, const Vector4& normal);
-    Vector4 GetNormal(unsigned index) const;
+    void SetNormal(unsigned int index, const Vector4& normal);
+    Vector4 GetNormal(unsigned int index) const;
 
-    Polygon GetPolygon(unsigned index) const;
+    Polygon GetPolygon(unsigned int index) const;
 
-    void TransformPoint(unsigned index, const Matrix4& transformation_matrix);
-    void TransformNormal(unsigned index, const Matrix4& transformation_matrix);
+    void TransformPoint(unsigned int index, const Matrix4& transformation_matrix);
+    void TransformNormal(unsigned int index, const Matrix4& transformation_matrix);
 
     size_t GetPointCount() const;
     size_t GetColorCount() const;

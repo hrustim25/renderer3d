@@ -3,13 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-Renderer::Renderer() : rasterizer_(SCREEN_WIDTH_, SCREEN_HEIGHT_, camera_) {
-}
-
-Renderer::Renderer(unsigned screen_width, unsigned screen_height)
-    : SCREEN_HEIGHT_(screen_height),
-      SCREEN_WIDTH_(screen_width),
-      rasterizer_(SCREEN_WIDTH_, SCREEN_HEIGHT_, camera_) {
+Renderer::Renderer() : rasterizer_(k_screen_width, k_screen_height, camera_) {
 }
 
 void Renderer::SetFillMode(bool is_texture_mode) {
@@ -63,7 +57,7 @@ Matrix4 GetKeyboardChange(sf::Keyboard::Key key) {
 }
 
 void Renderer::Start() {
-    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH_, SCREEN_HEIGHT_), "3D Renderer",
+    sf::RenderWindow window(sf::VideoMode(k_screen_width, k_screen_height), "3D Renderer",
                             sf::Style::Close);
     window.setFramerateLimit(60);
 
@@ -112,10 +106,10 @@ void Renderer::Start() {
         }
 
         const uint32_t* varray = rasterizer_.GetPixelArray();
-        unsigned len = SCREEN_WIDTH_ * SCREEN_HEIGHT_;
+        unsigned int len = k_screen_width * k_screen_height;
         sf::VertexArray result_array(sf::Points, len);
         for (int i = 0; i < len; ++i) {
-            result_array[i].position = sf::Vector2f(i % SCREEN_WIDTH_, i / SCREEN_WIDTH_);
+            result_array[i].position = sf::Vector2f(i % k_screen_width, i / k_screen_width);
             result_array[i].color = sf::Color(varray[i]);
         }
         window.draw(result_array);

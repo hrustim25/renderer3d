@@ -22,6 +22,6 @@ private:
 };
 
 // axis = 0, 1, 2 - XY, XZ, YZ rotation, respectively
-Matrix4 CreateRotationMatrix(unsigned axis, long double angle);
+Matrix4 CreateRotationMatrix(unsigned int axis, long double angle);
 
 Matrix4 CreateMoveMatrix(long double dx, long double dy, long double dz);

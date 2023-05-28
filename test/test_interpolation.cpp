@@ -14,7 +14,7 @@ int main() {
     points[1] = {30, 0, 0, 1};
     points[2] = {-30, 0, 0, 1};
 
-    for (unsigned i = 0; i < 3; ++i) {
+    for (unsigned int i = 0; i < 3; ++i) {
         renderer.GetSpace().AddPoint(points[i]);
     }
 

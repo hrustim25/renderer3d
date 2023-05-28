@@ -30,17 +30,17 @@ int main() {
     uint8_t greens[4] = {0, 220, 255, 0};
     uint8_t blues[4] = {0, 220, 0, 255};
 
-    for (unsigned i = 0; i < 12; ++i) {
+    for (unsigned int i = 0; i < 12; ++i) {
         renderer.GetSpace().AddPoint(points[i]);
     }
-    for (unsigned i = 0; i < 4; ++i) {
+    for (unsigned int i = 0; i < 4; ++i) {
         uint32_t color = reds[i];
         color = (color << 8) + greens[i];
         color = (color << 8) + blues[i];
         color = (color << 8) + 255;
         renderer.GetSpace().AddColor(color);
     }
-    for (unsigned i = 0; i < 4; ++i) {
+    for (unsigned int i = 0; i < 4; ++i) {
         renderer.GetSpace().AddPolygon(3 * i, 3 * i + 1, 3 * i + 2);
         renderer.GetSpace().SetPolygonColors(i, i, i, i);
     }

@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-Rasterizer::Rasterizer(unsigned screen_width, unsigned screen_height, const Camera &camera)
-    : SCREEN_WIDTH_(screen_width), SCREEN_HEIGHT_(screen_height), camera_(camera) {
+Rasterizer::Rasterizer(unsigned int screen_width, unsigned int screen_height, const Camera &camera)
+    : k_screen_width(screen_width), k_screen_height(screen_height), camera_(camera) {
     color_buffer_ = std::make_unique<uint32_t[]>(screen_width * screen_height);
     zbuffer_ = std::make_unique<long double[]>(screen_width * screen_height);
 }
@@ -13,7 +13,7 @@ void Rasterizer::SetFillMode(bool is_texture_mode) {
 }
 
 void Rasterizer::Clear() {
-    for (unsigned i = 0; i < SCREEN_WIDTH_ * SCREEN_HEIGHT_; ++i) {
+    for (unsigned int i = 0; i < k_screen_width * k_screen_height; ++i) {
         color_buffer_[i] = 255;
         zbuffer_[i] = 1e18;
     }
@@ -47,7 +47,7 @@ long double NormalizeTextureCoordinate(long double coord) {
 
 void Rasterizer::FillRow(const Edge &left_edge, const Edge &right_edge, long long cur_y) {
     long long first_x = std::max(0.0L, std::ceil(left_edge.GetX()));
-    long long last_x = std::min((long double)SCREEN_WIDTH_, std::ceil(right_edge.GetX()));
+    long long last_x = std::min((long double)k_screen_width, std::ceil(right_edge.GetX()));
     long double dist = right_edge.GetX() - left_edge.GetX();
     long double dx = first_x - left_edge.GetX();
 
@@ -68,7 +68,7 @@ void Rasterizer::FillRow(const Edge &left_edge, const Edge &right_edge, long lon
 
     Vertex cur_vertex;
 
-    long long point_position = cur_y * SCREEN_WIDTH_ + first_x;
+    long long point_position = cur_y * k_screen_width + first_x;
     for (long long cur_x = first_x; cur_x < last_x; ++cur_x) {
         long double cur_z = 1.0L / cur_z_inv;
         if (cur_z < zbuffer_[point_position] && camera_.GetNearClipDistance() < cur_z &&
@@ -114,8 +114,8 @@ void Rasterizer::DrawOrientedTriangle(const Vertex &vertex1, const Vertex &verte
     Edge left_edge = type ? edge13 : edge12;
     Edge right_edge = type ? edge12 : edge13;
     long long first_y = std::max(0.0L, std::ceil(vertex1.GetPoint()(1)));
-    long long mid_y = std::min((long double)SCREEN_HEIGHT_, std::ceil(vertex2.GetPoint()(1)));
-    long long last_y = std::min((long double)SCREEN_HEIGHT_, std::ceil(vertex3.GetPoint()(1)));
+    long long mid_y = std::min((long double)k_screen_height, std::ceil(vertex2.GetPoint()(1)));
+    long long last_y = std::min((long double)k_screen_height, std::ceil(vertex3.GetPoint()(1)));
 
     left_edge.InitialStep(first_y);
     right_edge.InitialStep(first_y);
