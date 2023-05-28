@@ -4,7 +4,7 @@ Simple software 3d-renderer written from scratch in C++ using SFML graphics libr
 
 ## Setup
 
-To setup after cloning repository use
+To setup on linux after cloning repository use
 ```
 ./setup.sh
 ```
