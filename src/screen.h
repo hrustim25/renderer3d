@@ -14,13 +14,16 @@ public:
     unsigned int GetWidth() const;
     unsigned int GetHeight() const;
 
-    void DrawPixel(unsigned int x, unsigned int y, uint32_t color, long double depth);
+    void DrawPixel(unsigned int x, unsigned int y, long double depth, uint32_t color,
+                   long double brightness);
 
     uint32_t GetPixelColor(unsigned int x, unsigned int y) const;
 
     void Clear();
 
 private:
+    uint32_t ApplyBrightness(uint32_t color, long double brightness);
+
     const unsigned int k_screen_width_ = 800;
     const unsigned int k_screen_height_ = 600;
     std::vector<uint32_t> color_buffer_;

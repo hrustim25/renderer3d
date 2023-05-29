@@ -24,11 +24,12 @@ unsigned int Screen::GetHeight() const {
     return k_screen_height_;
 }
 
-void Screen::DrawPixel(unsigned int x, unsigned int y, uint32_t color, long double depth) {
+void Screen::DrawPixel(unsigned int x, unsigned int y, long double depth, uint32_t color,
+                       long double brightness) {
     unsigned int position = x * k_screen_height_ + y;
     if (depth < zbuffer_[position]) {
         zbuffer_[position] = depth;
-        color_buffer_[position] = color;
+        color_buffer_[position] = ApplyBrightness(color, brightness);
     }
 }
 
@@ -40,6 +41,14 @@ uint32_t Screen::GetPixelColor(unsigned int x, unsigned int y) const {
 void Screen::Clear() {
     color_buffer_.assign(k_screen_width_ * k_screen_height_, default_color_value);
     zbuffer_.assign(k_screen_width_ * k_screen_height_, default_z_value);
+}
+
+uint32_t Screen::ApplyBrightness(uint32_t color, long double brightness) {
+    uint8_t r = (color >> 24) * brightness + 0.5;
+    uint8_t g = ((color << 8) >> 24) * brightness + 0.5;
+    uint8_t b = ((color << 16) >> 24) * brightness + 0.5;
+    uint8_t a = (color << 24) >> 24;
+    return (r << 24) + (g << 16) + (b << 8) + a;
 }
 
 }  // namespace rend

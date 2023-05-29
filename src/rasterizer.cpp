@@ -8,26 +8,10 @@ Rasterizer::Rasterizer(unsigned int screen_width, unsigned int screen_height)
     : screen_(screen_width, screen_height) {
 }
 
-long double GetTriangleArea(const Vertex &vertex1, const Vertex &vertex2, const Vertex &vertex3) {
+bool GetTriangleType(const Vertex &vertex1, const Vertex &vertex2, const Vertex &vertex3) {
     Vector4 side1 = vertex2.GetPoint() - vertex1.GetPoint();
     Vector4 side2 = vertex3.GetPoint() - vertex1.GetPoint();
-    return (side1(0) * side2(1) - side2(0) * side1(1)) / 2;
-}
-
-uint32_t ApplyBrightness(uint32_t color, long double brightness) {
-    uint8_t r = (color >> 24) * brightness + 0.5;
-    uint8_t g = ((color << 8) >> 24) * brightness + 0.5;
-    uint8_t b = ((color << 16) >> 24) * brightness + 0.5;
-    uint8_t a = (color << 24) >> 24;
-    return (r << 24) + (g << 16) + (b << 8) + a;
-}
-
-long double NormalizeTextureCoordinate(long double coord) {
-    coord -= (long long)coord;
-    if (coord < 0) {
-        coord += 1;
-    }
-    return coord;
+    return (side1(0) * side2(1) - side2(0) * side1(1)) >= 0;
 }
 
 void Rasterizer::FillRow(const Edge &left_edge, const Edge &right_edge, long long cur_y) {
@@ -63,17 +47,15 @@ void Rasterizer::FillRow(const Edge &left_edge, const Edge &right_edge, long lon
         long double cur_z = 1.0L / cur_z_inv;
         uint32_t pixel_color;
         if (left_edge.GetTexturePointer()) {
-            long long tex_x = NormalizeTextureCoordinate(cur_tex_x_over_z * cur_z) *
-                              left_edge.GetTexturePointer()->Width();
-            long long tex_y = NormalizeTextureCoordinate(1 - cur_tex_y_over_z * cur_z) *
-                              left_edge.GetTexturePointer()->Height();
-            pixel_color = left_edge.GetTexturePointer()->GetPixel(tex_y, tex_x).GetColors();
+            long long tex_x = (cur_tex_x_over_z * cur_z) * left_edge.GetTexturePointer()->Width();
+            long long tex_y =
+                (1 - cur_tex_y_over_z * cur_z) * left_edge.GetTexturePointer()->Height();
+            pixel_color = left_edge.GetTexturePointer()->GetPixel(tex_x, tex_y).GetColors();
         } else {
             cur_vertex.SetColor(cur_color);
             pixel_color = cur_vertex.GetColor();
         }
-        pixel_color = ApplyBrightness(pixel_color, cur_brightness);
-        screen_.DrawPixel(cur_x, cur_y, pixel_color, cur_z);
+        screen_.DrawPixel(cur_x, cur_y, cur_z, pixel_color, cur_brightness);
 
         cur_z_inv += z_inv_step;
         if (left_edge.GetTexturePointer()) {
@@ -91,7 +73,7 @@ void Rasterizer::DrawOrientedTriangle(const Vertex &vertex1, const Vertex &verte
     Edge edge12(vertex1, vertex2);
     Edge edge13(vertex1, vertex3);
     Edge edge23(vertex2, vertex3);
-    bool type = GetTriangleArea(vertex1, vertex2, vertex3) >= 0;
+    bool type = GetTriangleType(vertex1, vertex2, vertex3);
 
     Edge left_edge = type ? edge13 : edge12;
     Edge right_edge = type ? edge12 : edge13;

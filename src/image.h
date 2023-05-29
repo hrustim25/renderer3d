@@ -23,11 +23,11 @@ public:
 
     size_t Height() const;
 
-    void SetPixel(int y, int x, const RGB& pixel);
+    void SetPixel(int x, int y, const RGB& pixel);
 
-    RGB GetPixel(int y, int x) const;
+    RGB GetPixel(int x, int y) const;
 
-    RGB& GetPixel(int y, int x);
+    RGB& GetPixel(int x, int y);
 
     void ReadImage(const std::string& filename);
 

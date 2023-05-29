@@ -39,16 +39,24 @@ size_t Image::Height() const {
     return data_.size();
 }
 
-RGB Image::GetPixel(int y, int x) const {
-    return data_[y][x];
+RGB Image::GetPixel(int x, int y) const {
+    return data_[x][y];
 }
 
-void Image::SetPixel(int y, int x, const RGB& pixel) {
-    data_[y][x] = pixel;
+void Image::SetPixel(int x, int y, const RGB& pixel) {
+    data_[x][y] = pixel;
 }
 
-RGB& Image::GetPixel(int y, int x) {
-    return data_[y][x];
+RGB& Image::GetPixel(int x, int y) {
+    x = x % Width();
+    if (x < 0) {
+        x += Width();
+    }
+    y = y % Height();
+    if (y < 0) {
+        y += Height();
+    }
+    return data_[x][y];
 }
 
 void Image::ReadImage(const std::string& filename) {
@@ -102,7 +110,7 @@ void Image::ReadJpg(const std::string& filename) {
             } else {
                 pixel.r = pixel.g = pixel.b = buffer[0][x];
             }
-            SetPixel(y, x, pixel);
+            SetPixel(x, y, pixel);
         }
         ++y;
     }
@@ -188,7 +196,7 @@ void Image::ReadPng(const std::string& filename) {
         png_bytep row_ptr = row_pointers[y];
         for (int x = 0; x < Width(); ++x) {
             png_bytep pixel_ptr = &row_ptr[x * 4];
-            SetPixel(y, x, RGB{.r = pixel_ptr[0], .g = pixel_ptr[1], .b = pixel_ptr[2]});
+            SetPixel(x, y, RGB{.r = pixel_ptr[0], .g = pixel_ptr[1], .b = pixel_ptr[2]});
         }
     }
     free(row_pointers);
@@ -224,7 +232,7 @@ void Image::ReadBmp(const std::string& filename) {
                 fread(data + was_read, sizeof(unsigned char), full_width - was_read, infile);
         }
         for (size_t j = 0; j < Width(); ++j) {
-            SetPixel(i, j, {(int)data[j * 3 + 2], (int)data[j * 3 + 1], (int)data[j * 3 + 0]});
+            SetPixel(j, i, {(int)data[j * 3 + 2], (int)data[j * 3 + 1], (int)data[j * 3 + 0]});
         }
     }
 
