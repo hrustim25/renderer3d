@@ -8,28 +8,20 @@ namespace rend {
 
 class Renderer {
 public:
-    Renderer();
+    Renderer() = default;
+    Renderer(unsigned int screen_width, unsigned int screen_height);
 
-    void SetFillMode(bool is_texture_mode);
+    const Screen& GetScreen() const;
 
-    Camera& GetCamera();
-    Space& GetSpace();
-
-    void SetRotationMatrix(const Matrix4& matrix);
-
-    void Start();
+    const Screen& DrawScene(const Space& space, const Camera& camera);
 
 private:
-    static constexpr unsigned int k_screen_width = 800;
-    static constexpr unsigned int k_screen_height = 600;
+    bool IsPolygonVisible(const Point4& point1, const Point4& point2, const Point4& point3,
+                          const Camera& camera) const;
+    void DrawPolygon(const Vertex& vertex1, const Vertex& vertex2, const Vertex& vertex3,
+                     const Camera& camera);
 
-    bool is_texture_mode_ = false;
-
-    Camera camera_;
-    Space space_;
     Rasterizer rasterizer_;
-
-    Matrix4 transformation_matrix_;
 };
 
 }  // namespace rend

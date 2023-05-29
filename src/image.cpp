@@ -16,9 +16,6 @@ uint32_t RGB::GetColors() const {
     return result;
 }
 
-Image::Image() {
-}
-
 Image::Image(size_t width, size_t height) {
     SetSize(width, height);
 }

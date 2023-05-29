@@ -7,7 +7,7 @@ namespace rend {
 
 class ObjectReader {
 public:
-    ObjectReader();
+    ObjectReader() = default;
 
     Object3d ReadObject(const std::string& filename, Space& space) const;
 

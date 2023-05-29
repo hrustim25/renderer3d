@@ -18,8 +18,6 @@ public:
     const Image* GetTexturePointer() const;
     long double GetBrightness() const;
 
-    void SetMode(bool is_texture_mode);
-
     void InitialStep(long long first_y);
 
     void Step();

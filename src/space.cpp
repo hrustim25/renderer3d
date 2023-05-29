@@ -4,13 +4,7 @@
 
 namespace rend {
 
-Space::Space() {
-}
-
-Space::Space(unsigned int expected_size) {
-    points_.reserve(expected_size);
-    colors_.reserve(expected_size);
-    polygons_.reserve(expected_size);
+Space::Space() : textures_(1), normals_{{-1, 0, 0, 0}} {
 }
 
 void Space::AddPoint(const Point4& point) {
@@ -102,7 +96,7 @@ void Space::SetNormal(unsigned int index, const Vector4& normal) {
     normals_[index] = NormalizeVector(normal);
 }
 
-Point4 Space::GetPoint(unsigned int index) const {
+const Point4& Space::GetPoint(unsigned int index) const {
     return points_[index];
 }
 
@@ -118,22 +112,23 @@ const Image* Space::GetTexturePointer(unsigned int index) const {
     return &textures_[index];
 }
 
-Vector4 Space::GetNormal(unsigned int index) const {
+const Vector4& Space::GetNormal(unsigned int index) const {
     return normals_[index];
 }
 
-Space::Polygon Space::GetPolygon(unsigned int index) const {
+const Space::Polygon& Space::GetPolygon(unsigned int index) const {
     return polygons_[index];
 }
 
-void Space::TransformPoint(unsigned int index, const Matrix4& transformation_matrix) {
-    SetPoint(index, transformation_matrix * GetPoint(index));
-}
-
-void Space::TransformNormal(unsigned int index, const Matrix4& transformation_matrix) {
-    Vector4 result = NormalizeVector(transformation_matrix * GetNormal(index));
-    result(3) = 0;
-    SetNormal(index, result);
+void Space::TransformAll(const Matrix4& transformation_matrix) {
+    for (size_t i = 0; i < GetPointCount(); ++i) {
+        SetPoint(i, transformation_matrix * GetPoint(i));
+    }
+    for (size_t i = 1; i < GetNormalCount(); ++i) {
+        Vector4 result = NormalizeVector(transformation_matrix * GetNormal(i));
+        result(3) = 0;
+        SetNormal(i, result);
+    }
 }
 
 size_t Space::GetPointCount() const {

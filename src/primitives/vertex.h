@@ -10,8 +10,8 @@ public:
     Vertex();
     Vertex(const Point4& point);
     Vertex(const Point4& point, uint32_t color);
-    Vertex(const Point4& point, long double tex_x, long double tex_y);
-    Vertex(const Point4& point, const Image* texture_ptr);
+    Vertex(const Point4& point, std::pair<long double, long double> texture_coordinates,
+           const Image* texture_ptr);
 
     void SetPoint(const Point4& point);
     void SetColor(uint32_t color);
@@ -22,14 +22,14 @@ public:
     void SetNormal(const Vector4& normal);
     void SetBrightness(long double brightness);
 
-    Point4 GetPoint() const;
+    const Point4& GetPoint() const;
     uint32_t GetColor() const;
     uint8_t GetColorPart(unsigned int position) const;
     Vector4 GetColorVector() const;
     long double GetTextureX() const;
     long double GetTextureY() const;
     const Image* GetTexturePointer() const;
-    Vector4 GetNormal() const;
+    const Vector4& GetNormal() const;
     long double GetBrightness() const;
 
     static Vector4 GetLightDirection();
@@ -43,8 +43,6 @@ private:
     long double brightness_ = 1;
 
     const Image* texture_ = nullptr;
-
-    static Vector4 light_direction_;
 };
 
 }  // namespace rend

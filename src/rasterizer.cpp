@@ -4,25 +4,8 @@
 
 namespace rend {
 
-Rasterizer::Rasterizer(unsigned int screen_width, unsigned int screen_height, const Camera &camera)
-    : k_screen_width(screen_width), k_screen_height(screen_height), camera_(camera) {
-    color_buffer_ = std::make_unique<uint32_t[]>(screen_width * screen_height);
-    zbuffer_ = std::make_unique<long double[]>(screen_width * screen_height);
-}
-
-void Rasterizer::SetFillMode(bool is_texture_mode) {
-    is_texture_mode_ = is_texture_mode;
-}
-
-void Rasterizer::Clear() {
-    for (unsigned int i = 0; i < k_screen_width * k_screen_height; ++i) {
-        color_buffer_[i] = 255;
-        zbuffer_[i] = 1e18;
-    }
-}
-
-Point4 NormalizeCoords(const Point4 &p) {
-    return {p(0) / p(3), p(1) / p(3), p(2) / p(3), p(3)};
+Rasterizer::Rasterizer(unsigned int screen_width, unsigned int screen_height)
+    : screen_(screen_width, screen_height) {
 }
 
 long double GetTriangleArea(const Vertex &vertex1, const Vertex &vertex2, const Vertex &vertex3) {
@@ -48,8 +31,14 @@ long double NormalizeTextureCoordinate(long double coord) {
 }
 
 void Rasterizer::FillRow(const Edge &left_edge, const Edge &right_edge, long long cur_y) {
-    long long first_x = std::max(0.0L, std::ceil(left_edge.GetX()));
-    long long last_x = std::min((long double)k_screen_width, std::ceil(right_edge.GetX()));
+    long long first_x = std::ceil(left_edge.GetX());
+    if (first_x < 0) {
+        first_x = 0;
+    }
+    long long last_x = std::ceil(right_edge.GetX());
+    if (last_x > screen_.GetWidth()) {
+        last_x = screen_.GetWidth();
+    }
     long double dist = right_edge.GetX() - left_edge.GetX();
     long double dx = first_x - left_edge.GetX();
 
@@ -70,30 +59,24 @@ void Rasterizer::FillRow(const Edge &left_edge, const Edge &right_edge, long lon
 
     Vertex cur_vertex;
 
-    long long point_position = cur_y * k_screen_width + first_x;
     for (long long cur_x = first_x; cur_x < last_x; ++cur_x) {
         long double cur_z = 1.0L / cur_z_inv;
-        if (cur_z < zbuffer_[point_position] && camera_.GetNearClipDistance() < cur_z &&
-            cur_z <= camera_.GetClipDistance()) {
-            zbuffer_[point_position] = cur_z;
-            if (is_texture_mode_) {
-                long long tex_x = NormalizeTextureCoordinate(cur_tex_x_over_z * cur_z) *
-                                  left_edge.GetTexturePointer()->Width();
-                long long tex_y = NormalizeTextureCoordinate(1 - cur_tex_y_over_z * cur_z) *
-                                  left_edge.GetTexturePointer()->Height();
-                color_buffer_[point_position] =
-                    left_edge.GetTexturePointer()->GetPixel(tex_y, tex_x).GetColors();
-            } else {
-                cur_vertex.SetColor(cur_color);
-                color_buffer_[point_position] = cur_vertex.GetColor();
-            }
-            color_buffer_[point_position] =
-                ApplyBrightness(color_buffer_[point_position], cur_brightness);
+        uint32_t pixel_color;
+        if (left_edge.GetTexturePointer()) {
+            long long tex_x = NormalizeTextureCoordinate(cur_tex_x_over_z * cur_z) *
+                              left_edge.GetTexturePointer()->Width();
+            long long tex_y = NormalizeTextureCoordinate(1 - cur_tex_y_over_z * cur_z) *
+                              left_edge.GetTexturePointer()->Height();
+            pixel_color = left_edge.GetTexturePointer()->GetPixel(tex_y, tex_x).GetColors();
+        } else {
+            cur_vertex.SetColor(cur_color);
+            pixel_color = cur_vertex.GetColor();
         }
+        pixel_color = ApplyBrightness(pixel_color, cur_brightness);
+        screen_.DrawPixel(cur_x, cur_y, pixel_color, cur_z);
 
-        ++point_position;
         cur_z_inv += z_inv_step;
-        if (is_texture_mode_) {
+        if (left_edge.GetTexturePointer()) {
             cur_tex_x_over_z += tex_x_over_z_step;
             cur_tex_y_over_z += tex_y_over_z_step;
         } else {
@@ -108,16 +91,22 @@ void Rasterizer::DrawOrientedTriangle(const Vertex &vertex1, const Vertex &verte
     Edge edge12(vertex1, vertex2);
     Edge edge13(vertex1, vertex3);
     Edge edge23(vertex2, vertex3);
-    edge12.SetMode(is_texture_mode_);
-    edge13.SetMode(is_texture_mode_);
-    edge23.SetMode(is_texture_mode_);
-    int type = GetTriangleArea(vertex1, vertex2, vertex3) >= 0;
+    bool type = GetTriangleArea(vertex1, vertex2, vertex3) >= 0;
 
     Edge left_edge = type ? edge13 : edge12;
     Edge right_edge = type ? edge12 : edge13;
-    long long first_y = std::max(0.0L, std::ceil(vertex1.GetPoint()(1)));
-    long long mid_y = std::min((long double)k_screen_height, std::ceil(vertex2.GetPoint()(1)));
-    long long last_y = std::min((long double)k_screen_height, std::ceil(vertex3.GetPoint()(1)));
+    long long first_y = std::ceil(vertex1.GetPoint()(1));
+    if (first_y < 0) {
+        first_y = 0;
+    }
+    long long mid_y = std::ceil(vertex2.GetPoint()(1));
+    if (mid_y > screen_.GetHeight()) {
+        mid_y = screen_.GetHeight();
+    }
+    long long last_y = std::ceil(vertex3.GetPoint()(1));
+    if (last_y > screen_.GetHeight()) {
+        last_y = screen_.GetHeight();
+    }
 
     left_edge.InitialStep(first_y);
     right_edge.InitialStep(first_y);
@@ -128,7 +117,10 @@ void Rasterizer::DrawOrientedTriangle(const Vertex &vertex1, const Vertex &verte
         right_edge.Step();
     }
 
-    mid_y = std::max(0.0L, std::ceil(vertex2.GetPoint()(1)));
+    mid_y = std::ceil(vertex2.GetPoint()(1));
+    if (mid_y < 0) {
+        mid_y = 0;
+    }
     edge23.InitialStep(mid_y);
     if (type) {
         right_edge = edge23;
@@ -144,53 +136,11 @@ void Rasterizer::DrawOrientedTriangle(const Vertex &vertex1, const Vertex &verte
     }
 }
 
-bool Rasterizer::IsTriangleVisible(const Point4 &point1, const Point4 &point2,
-                                   const Point4 &point3) const {
-    if (point1(2) < camera_.GetNearClipDistance() && point2(2) < camera_.GetNearClipDistance() &&
-        point3(2) < camera_.GetNearClipDistance()) {
-        return false;
-    }
-    if (point1(2) > camera_.GetClipDistance() && point2(2) > camera_.GetClipDistance() &&
-        point3(2) > camera_.GetClipDistance()) {
-        return false;
-    }
-    if (point1(0) < -camera_.GetViewPiramidWidthTan() * point1(2) &&
-        point2(0) < -camera_.GetViewPiramidWidthTan() * point2(2) &&
-        point3(0) < -camera_.GetViewPiramidWidthTan() * point3(2)) {
-        return false;
-    }
-    if (point1(0) > camera_.GetViewPiramidWidthTan() * point1(2) &&
-        point2(0) > camera_.GetViewPiramidWidthTan() * point2(2) &&
-        point3(0) > camera_.GetViewPiramidWidthTan() * point3(2)) {
-        return false;
-    }
-    if (point1(1) < -camera_.GetViewPiramidHeightTan() * point1(2) &&
-        point2(1) < -camera_.GetViewPiramidHeightTan() * point2(2) &&
-        point3(1) < -camera_.GetViewPiramidHeightTan() * point3(2)) {
-        return false;
-    }
-    if (point1(1) > camera_.GetViewPiramidHeightTan() * point1(2) &&
-        point2(1) > camera_.GetViewPiramidHeightTan() * point2(2) &&
-        point3(1) > camera_.GetViewPiramidHeightTan() * point3(2)) {
-        return false;
-    }
-    return true;
-}
-
 void Rasterizer::DrawPolygon(const Vertex &vertex1, const Vertex &vertex2, const Vertex &vertex3) {
-    if (!IsTriangleVisible(camera_.ToLocalCoordinates(vertex1.GetPoint()),
-                           camera_.ToLocalCoordinates(vertex2.GetPoint()),
-                           camera_.ToLocalCoordinates(vertex3.GetPoint()))) {
-        return;
-    }
-
     Vertex vs[3];
     vs[0] = vertex1;
     vs[1] = vertex2;
     vs[2] = vertex3;
-    vs[0].SetPoint(NormalizeCoords(camera_.ProjectToScreen(vs[0].GetPoint())));
-    vs[1].SetPoint(NormalizeCoords(camera_.ProjectToScreen(vs[1].GetPoint())));
-    vs[2].SetPoint(NormalizeCoords(camera_.ProjectToScreen(vs[2].GetPoint())));
     if (vs[0].GetPoint()(1) > vs[1].GetPoint()(1)) {
         std::swap(vs[0], vs[1]);
     }
@@ -203,8 +153,12 @@ void Rasterizer::DrawPolygon(const Vertex &vertex1, const Vertex &vertex2, const
     DrawOrientedTriangle(vs[0], vs[1], vs[2]);
 }
 
-const uint32_t *Rasterizer::GetPixelArray() const {
-    return color_buffer_.get();
+const Screen &Rasterizer::GetScreen() const {
+    return screen_;
+}
+
+void Rasterizer::ClearScreen() {
+    screen_.Clear();
 }
 
 }  // namespace rend

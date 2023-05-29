@@ -19,7 +19,6 @@ public:
 
 public:
     Space();
-    Space(unsigned int expected_size);
 
     void AddPoint(const Point4& point);
     void AddColor(uint32_t color);
@@ -38,7 +37,7 @@ public:
                            unsigned int normal_index2, unsigned int normal_index3);
 
     void SetPoint(unsigned int index, const Point4& point);
-    Point4 GetPoint(unsigned int index) const;
+    const Point4& GetPoint(unsigned int index) const;
 
     void SetColor(unsigned int index, uint32_t color);
     uint32_t GetColor(unsigned int index) const;
@@ -50,12 +49,11 @@ public:
     const Image* GetTexturePointer(unsigned int index) const;
 
     void SetNormal(unsigned int index, const Vector4& normal);
-    Vector4 GetNormal(unsigned int index) const;
+    const Vector4& GetNormal(unsigned int index) const;
 
-    Polygon GetPolygon(unsigned int index) const;
+    const Polygon& GetPolygon(unsigned int index) const;
 
-    void TransformPoint(unsigned int index, const Matrix4& transformation_matrix);
-    void TransformNormal(unsigned int index, const Matrix4& transformation_matrix);
+    void TransformAll(const Matrix4& transformation_matrix);
 
     size_t GetPointCount() const;
     size_t GetColorCount() const;

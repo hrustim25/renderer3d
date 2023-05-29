@@ -2,9 +2,6 @@
 
 namespace rend {
 
-Object3d::Object3d() {
-}
-
 Object3d::Object3d(std::vector<int> vertex_indexes) : vertex_indexes_(vertex_indexes) {
 }
 

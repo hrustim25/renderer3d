@@ -1,26 +1,21 @@
-#include "renderer.h"
-
 #include "object_reader.h"
+#include "base_application.h"
+
+class NarutoApp : public rend::BaseApplication {
+public:
+    NarutoApp() {
+        camera_.Transform(rend::CreateMoveMatrix(50, -13, 0));
+        camera_.Transform(rend::CreateRotationMatrix(1, 3.141592 / 2));
+        transformation_matrix_ = rend::CreateRotationMatrix(1, 3.141592 / 240);
+        rend::ObjectReader obj_reader;
+        rend::Object3d obj = obj_reader.ReadObject("../models/naruto.obj", space_);
+    }
+};
 
 int main() {
-    rend::Renderer renderer;
+    NarutoApp app;
 
-    renderer.GetCamera().Transform(rend::CreateMoveMatrix(50, -13, 0));
-    renderer.GetCamera().Transform(rend::CreateRotationMatrix(1, 3.141592 / 2));
-
-    rend::Matrix4 rm = rend::CreateRotationMatrix(1, 3.141592 / 240);
-    renderer.SetRotationMatrix(rm);
-
-    rend::ObjectReader obj_reader;
-    rend::Object3d obj = obj_reader.ReadObject("../models/naruto.obj", renderer.GetSpace());
-
-    renderer.SetFillMode(true);
-
-    for (unsigned int i = 0; i < renderer.GetSpace().GetPolygonCount(); ++i) {
-        renderer.GetSpace().SetPolygonTexture(i, renderer.GetSpace().GetPolygon(i).texture_index);
-    }
-
-    renderer.Start();
+    app.Start();
 
     return 0;
 }

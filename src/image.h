@@ -13,7 +13,7 @@ struct RGB {
 
 class Image {
 public:
-    Image();
+    Image() = default;
     Image(size_t width, size_t height);
     Image(const std::string& filename);
 

@@ -4,7 +4,10 @@
 
 namespace rend {
 
-Edge::Edge(Vertex v_min, Vertex v_max) : min_y_(v_min.GetPoint()(1)), max_y_(v_max.GetPoint()(1)) {
+Edge::Edge(Vertex v_min, Vertex v_max)
+    : min_y_(v_min.GetPoint()(1)),
+      max_y_(v_max.GetPoint()(1)),
+      is_texture_mode_(v_min.GetTexturePointer() != nullptr) {
     long double dy = max_y_ - min_y_;
 
     cur_x_ = v_min.GetPoint()(0);
@@ -62,10 +65,6 @@ const Image* Edge::GetTexturePointer() const {
 
 long double Edge::GetBrightness() const {
     return cur_brightness_;
-}
-
-void Edge::SetMode(bool is_texture_mode) {
-    is_texture_mode_ = is_texture_mode;
 }
 
 void Edge::InitialStep(long long first_y) {

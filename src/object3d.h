@@ -8,7 +8,7 @@ namespace rend {
 
 class Object3d : public Pivot {
 public:
-    Object3d();
+    Object3d() = default;
     Object3d(std::vector<int> vertex_indexes);
 
     void AddVertexIndex(int index);

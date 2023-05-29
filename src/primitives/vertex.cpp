@@ -2,12 +2,6 @@
 
 namespace rend {
 
-Vector4 Vertex::light_direction_ = {-1, 0, 0, 0};
-
-Vector4 Vertex::GetLightDirection() {
-    return light_direction_;
-}
-
 Vertex::Vertex() : color_(255) {
 }
 
@@ -17,12 +11,12 @@ Vertex::Vertex(const Point4& point) : point_(point), color_(255) {
 Vertex::Vertex(const Point4& point, uint32_t color) : point_(point), color_(color) {
 }
 
-Vertex::Vertex(const Point4& point, long double tex_x, long double tex_y)
-    : point_(point), tex_x_(tex_x), tex_y_(tex_y) {
-}
-
-Vertex::Vertex(const Point4& point, const Image* texture_ptr)
-    : point_(point), texture_(texture_ptr) {
+Vertex::Vertex(const Point4& point, std::pair<long double, long double> texture_coordinates,
+               const Image* texture_ptr)
+    : point_(point),
+      tex_x_(texture_coordinates.first),
+      tex_y_(texture_coordinates.second),
+      texture_(texture_ptr) {
 }
 
 void Vertex::SetPoint(const Point4& point) {
@@ -61,14 +55,15 @@ long double AdjustBrightness(long double brightness) {
 
 void Vertex::SetNormal(const Vector4& normal) {
     normal_ = normal;
-    brightness_ = AdjustBrightness((normal.Transpose() * light_direction_)(0)) * 0.7 + 0.3;
+    Vector4 light_direction = {-1, 0, 0, 0};
+    brightness_ = AdjustBrightness((normal.Transpose() * light_direction)(0)) * 0.7 + 0.3;
 }
 
 void Vertex::SetBrightness(long double brightness) {
     brightness_ = brightness;
 }
 
-Point4 Vertex::GetPoint() const {
+const Point4& Vertex::GetPoint() const {
     return point_;
 }
 
@@ -84,8 +79,10 @@ uint8_t Vertex::GetColorPart(unsigned int position) const {
 }
 
 Vector4 Vertex::GetColorVector() const {
-    return {((long double)GetColorPart(0)) / 256, ((long double)GetColorPart(1)) / 256,
-            ((long double)GetColorPart(2)) / 256, ((long double)GetColorPart(3)) / 256};
+    return {static_cast<long double>(GetColorPart(0)) / 256,
+            static_cast<long double>(GetColorPart(1)) / 256,
+            static_cast<long double>(GetColorPart(2)) / 256,
+            static_cast<long double>(GetColorPart(3)) / 256};
 }
 
 long double Vertex::GetTextureX() const {
@@ -100,7 +97,7 @@ const Image* Vertex::GetTexturePointer() const {
     return texture_;
 }
 
-Vector4 Vertex::GetNormal() const {
+const Vector4& Vertex::GetNormal() const {
     return normal_;
 }
 

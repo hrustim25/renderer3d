@@ -4,9 +4,6 @@
 
 namespace rend {
 
-ObjectReader::ObjectReader() {
-}
-
 Object3d ObjectReader::ReadObject(const std::string& filename, Space& space) const {
     size_t last_dot_index = filename.find_last_of('.');
     if (last_dot_index == std::string::npos) {
