@@ -30,7 +30,7 @@ void Pivot::Transform(const Matrix4& transformation_matrix) {
 }
 
 Point4 Pivot::ToGlobalCoordinates(const Point4& point) const {
-    return basis_.Transpose() * point + center_;
+    return Matrix4::Transpose(basis_) * point + center_;
 }
 
 Point4 Pivot::ToLocalCoordinates(const Point4& point) const {

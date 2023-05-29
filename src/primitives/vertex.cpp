@@ -56,7 +56,7 @@ long double AdjustBrightness(long double brightness) {
 void Vertex::SetNormal(const Vector4& normal) {
     normal_ = normal;
     Vector4 light_direction = {-1, 0, 0, 0};
-    brightness_ = AdjustBrightness((normal.Transpose() * light_direction)(0)) * 0.7 + 0.3;
+    brightness_ = AdjustBrightness((Vector4::Transpose(normal) * light_direction)(0)) * 0.7 + 0.3;
 }
 
 void Vertex::SetBrightness(long double brightness) {
