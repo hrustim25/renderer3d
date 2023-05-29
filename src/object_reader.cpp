@@ -4,7 +4,7 @@
 
 namespace rend {
 
-Object3d ObjectReader::ReadObject(const std::string& filename, Space& space) const {
+Object3d ObjectReader::ReadObject(const std::string& filename, Space* space) {
     size_t last_dot_index = filename.find_last_of('.');
     if (last_dot_index == std::string::npos) {
         last_dot_index = filename.length();
@@ -44,7 +44,7 @@ std::vector<std::string> ParseString(const std::string& str, const std::string& 
     return result;
 }
 
-Object3d ObjectReader::ReadObjFile(const std::string& filename, Space& space) const {
+Object3d ObjectReader::ReadObjFile(const std::string& filename, Space* space) {
     std::ifstream instream(filename);
     if (!instream.is_open()) {
         return Object3d();
@@ -52,9 +52,9 @@ Object3d ObjectReader::ReadObjFile(const std::string& filename, Space& space) co
 
     Object3d result;
 
-    size_t init_point_count = space.GetPointCount();
-    size_t init_tex_coords_count = space.GetTexCoordsCount();
-    size_t init_normal_count = space.GetNormalCount();
+    size_t init_point_count = space->GetPointCount();
+    size_t init_tex_coords_count = space->GetTexCoordsCount();
+    size_t init_normal_count = space->GetNormalCount();
 
     std::string data;
     while (instream) {
@@ -71,17 +71,17 @@ Object3d ObjectReader::ReadObjFile(const std::string& filename, Space& space) co
             long double y = std::stold(arg_array[2]);
             long double z = std::stold(arg_array[3]);
             long double w = 1.0;
-            space.AddPoint({x, y, z, w});
-            result.AddVertexIndex(space.GetPointCount() - 1);
+            space->AddPoint({x, y, z, w});
+            result.AddVertexIndex(space->GetPointCount() - 1);
         } else if (arg_array[0] == "vt") {
             long double tex_x = std::stold(arg_array[1]);
             long double tex_y = std::stold(arg_array[2]);
-            space.AddTextureCoords(tex_x, tex_y);
+            space->AddTextureCoords(tex_x, tex_y);
         } else if (arg_array[0] == "vn") {
             long double normal_x = std::stold(arg_array[1]);
             long double normal_y = std::stold(arg_array[2]);
             long double normal_z = std::stold(arg_array[3]);
-            space.AddNormal({normal_x, normal_y, normal_z, 0});
+            space->AddNormal({normal_x, normal_y, normal_z, 0});
         } else if (arg_array[0] == "f") {
             std::vector<std::string> vertex1 = ParseString(arg_array[1], "/");
             std::vector<std::string> vertex2 = ParseString(arg_array[2], "/");
@@ -89,24 +89,24 @@ Object3d ObjectReader::ReadObjFile(const std::string& filename, Space& space) co
             unsigned int vertex1_index = std::stoul(vertex1[0]) - 1 + init_point_count;
             unsigned int vertex2_index = std::stoul(vertex2[0]) - 1 + init_point_count;
             unsigned int vertex3_index = std::stoul(vertex3[0]) - 1 + init_point_count;
-            space.AddPolygon(vertex1_index, vertex2_index, vertex3_index);
-            space.SetPolygonTexture(space.GetPolygonCount() - 1, space.GetTextureCount() - 1);
+            space->AddPolygon(vertex1_index, vertex2_index, vertex3_index);
+            space->SetPolygonTexture(space->GetPolygonCount() - 1, space->GetTextureCount() - 1);
             if (vertex1.size() >= 2 && vertex1[1].size() > 0) {
                 unsigned int tex_coords1_index = std::stoul(vertex1[1]) - 1 + init_tex_coords_count;
                 unsigned int tex_coords2_index = std::stoul(vertex2[1]) - 1 + init_tex_coords_count;
                 unsigned int tex_coords3_index = std::stoul(vertex3[1]) - 1 + init_tex_coords_count;
-                space.SetPolygonTextureCoords(space.GetPolygonCount() - 1, tex_coords1_index,
-                                              tex_coords2_index, tex_coords3_index);
+                space->SetPolygonTextureCoords(space->GetPolygonCount() - 1, tex_coords1_index,
+                                               tex_coords2_index, tex_coords3_index);
             }
             if (vertex1.size() == 3) {
                 unsigned int normal1_index = std::stoul(vertex1[2]) - 1 + init_normal_count;
                 unsigned int normal2_index = std::stoul(vertex2[2]) - 1 + init_normal_count;
                 unsigned int normal3_index = std::stoul(vertex3[2]) - 1 + init_normal_count;
-                space.SetPolygonNormals(space.GetPolygonCount() - 1, normal1_index, normal2_index,
-                                        normal3_index);
+                space->SetPolygonNormals(space->GetPolygonCount() - 1, normal1_index, normal2_index,
+                                         normal3_index);
             }
         } else if (arg_array[0] == "usemtl") {
-            space.AddTexture(Image(arg_array[1]));
+            space->AddTexture(Image(arg_array[1]));
         }
     }
     return result;

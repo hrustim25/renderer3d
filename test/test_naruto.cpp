@@ -7,8 +7,7 @@ public:
         camera_.Transform(rend::CreateMoveMatrix(50, -13, 0));
         camera_.Transform(rend::CreateRotationMatrix(1, 3.141592 / 2));
         transformation_matrix_ = rend::CreateRotationMatrix(1, 3.141592 / 240);
-        rend::ObjectReader obj_reader;
-        rend::Object3d obj = obj_reader.ReadObject("../models/naruto.obj", space_);
+        rend::Object3d obj = rend::ObjectReader::ReadObject("../models/naruto.obj", &space_);
     }
 };
 

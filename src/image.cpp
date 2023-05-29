@@ -47,7 +47,7 @@ void Image::SetPixel(int x, int y, const RGB& pixel) {
     data_[x][y] = pixel;
 }
 
-RGB& Image::GetPixel(int x, int y) {
+RGB& Image::Pixel(int x, int y) {
     x = x % Width();
     if (x < 0) {
         x += Width();
@@ -71,8 +71,8 @@ void Image::ReadImage(const std::string& filename) {
         ReadJpg("../models/" + filename);
     } else if (file_type == "png") {
         ReadPng("../models/" + filename);
-    } else if (file_type == "bmp") {
-        ReadBmp("../models/" + filename);
+    } else {
+        SetSize(1, 1);
     }
 }
 
@@ -202,41 +202,6 @@ void Image::ReadPng(const std::string& filename) {
     free(row_pointers);
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    fclose(infile);
-}
-
-void Image::ReadBmp(const std::string& filename) {
-    FILE* infile = fopen(filename.c_str(), "rb");
-
-    if (!infile) {
-        fclose(infile);
-        return;
-    }
-
-    unsigned char header[54];
-    fread(header, sizeof(unsigned char), 54, infile);
-
-    SetSize(*(int*)&header[18], *(int*)&header[22]);
-    int padding = (Width() * 3) % 4;
-    if (padding > 0) {
-        padding = 4 - padding;
-    }
-
-    size_t full_width = Width() * 3 + padding;
-
-    unsigned char* data = new unsigned char[full_width];
-    for (size_t i = 0; i < Height(); i++) {
-        size_t was_read = 0;
-        while (was_read < full_width) {
-            was_read +=
-                fread(data + was_read, sizeof(unsigned char), full_width - was_read, infile);
-        }
-        for (size_t j = 0; j < Width(); ++j) {
-            SetPixel(j, i, {(int)data[j * 3 + 2], (int)data[j * 3 + 1], (int)data[j * 3 + 0]});
-        }
-    }
-
-    delete[] data;
     fclose(infile);
 }
 
