@@ -7,7 +7,7 @@ namespace rend {
 
 class Vertex {
 public:
-    Vertex();
+    Vertex() = default;
     Vertex(const Point4& point);
     Vertex(const Point4& point, uint32_t color);
     Vertex(const Point4& point, std::pair<long double, long double> texture_coordinates,
@@ -32,7 +32,7 @@ public:
 
 private:
     Point4 point_;
-    uint32_t color_ = 0;  // r, g, b, a
+    uint32_t color_ = 255;  // r, g, b, a
     long double tex_x_ = 0;
     long double tex_y_ = 0;
     long double brightness_ = 1;

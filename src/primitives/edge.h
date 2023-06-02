@@ -18,11 +18,11 @@ public:
     const Image* GetTexturePointer() const;
     long double GetBrightness() const;
 
-    void InitialStep(long long first_y);
-
-    void Step();
+    void Next();
 
 private:
+    void Prestep(long long first_y);
+
     long double min_y_ = 0;
     long double max_y_ = 0;
     long double cur_x_ = 0;

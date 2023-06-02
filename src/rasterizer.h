@@ -18,7 +18,25 @@ public:
     void ClearScreen();
 
 private:
-    void FillRow(const Edge& left_edge, const Edge& right_edge, long long cur_y);
+    struct RowIterator {
+        RowIterator(const Edge& left_edge, const Edge& right_edge);
+
+        void Next();
+
+        long long current_x;
+        long double z_inv_step;
+        long double current_z_inv;
+        Vector4 color_step;
+        Vector4 current_color;
+        long double tex_x_over_z_step;
+        long double current_tex_x_over_z;
+        long double tex_y_over_z_step;
+        long double current_tex_y_over_z;
+        long double brightness_step;
+        long double current_brightness;
+    };
+
+    void FillRow(const Edge& left_edge, const Edge& right_edge, long long current_y);
 
     void DrawOrientedTriangle(const Vertex& vertex1, const Vertex& vertex2, const Vertex& vertex3);
 

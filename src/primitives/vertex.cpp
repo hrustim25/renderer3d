@@ -2,10 +2,7 @@
 
 namespace rend {
 
-Vertex::Vertex() : color_(UINT8_MAX) {
-}
-
-Vertex::Vertex(const Point4& point) : point_(point), color_(UINT8_MAX) {
+Vertex::Vertex(const Point4& point) : point_(point) {
 }
 
 Vertex::Vertex(const Point4& point, uint32_t color) : point_(point), color_(color) {

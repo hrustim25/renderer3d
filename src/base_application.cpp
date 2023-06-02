@@ -3,7 +3,7 @@
 namespace rend {
 
 static constexpr long double k_camera_move_step = 0.5;
-static constexpr long double k_camera_rotation_degree = 0.01;
+static constexpr long double k_camera_rotation_degree = 0.02;
 
 BaseApplication::BaseApplication()
     : space_(),

@@ -64,6 +64,10 @@ public:
         return result;
     }
 
+    friend Matrix operator*(long double coefficient, const Matrix& matrix) {
+        return matrix * coefficient;
+    }
+
     Matrix& operator/=(long double coefficient) {
         for (unsigned int i = 0; i < N; ++i) {
             for (unsigned int j = 0; j < M; ++j) {

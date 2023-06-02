@@ -29,6 +29,12 @@ Edge::Edge(Vertex v_min, Vertex v_max)
 
     cur_brightness_ = v_min.GetBrightness();
     brightness_step_ = (v_max.GetBrightness() - v_min.GetBrightness()) / dy;
+
+    long long first_y = std::ceil(v_min.GetPoint()(1));
+    if (first_y < 0) {
+        first_y = 0;
+    }
+    Prestep(first_y);
 }
 
 long double Edge::GetMinY() const {
@@ -67,7 +73,7 @@ long double Edge::GetBrightness() const {
     return cur_brightness_;
 }
 
-void Edge::InitialStep(long long first_y) {
+void Edge::Prestep(long long first_y) {
     long double dy = first_y - min_y_;
 
     min_y_ = first_y;
@@ -82,7 +88,7 @@ void Edge::InitialStep(long long first_y) {
     cur_brightness_ += brightness_step_ * dy;
 }
 
-void Edge::Step() {
+void Edge::Next() {
     cur_x_ += x_step_;
     cur_z_inv_ += z_inv_step_;
     if (is_texture_mode_) {
