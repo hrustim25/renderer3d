@@ -2,10 +2,10 @@
 
 namespace rend {
 
-Vertex::Vertex() : color_(255) {
+Vertex::Vertex() : color_(UINT8_MAX) {
 }
 
-Vertex::Vertex(const Point4& point) : point_(point), color_(255) {
+Vertex::Vertex(const Point4& point) : point_(point), color_(UINT8_MAX) {
 }
 
 Vertex::Vertex(const Point4& point, uint32_t color) : point_(point), color_(color) {
@@ -54,13 +54,8 @@ long double AdjustBrightness(long double brightness) {
 }
 
 void Vertex::SetNormal(const Vector4& normal) {
-    normal_ = normal;
     Vector4 light_direction = {-1, 0, 0, 0};
     brightness_ = AdjustBrightness((Vector4::Transpose(normal) * light_direction)(0)) * 0.7 + 0.3;
-}
-
-void Vertex::SetBrightness(long double brightness) {
-    brightness_ = brightness;
 }
 
 const Point4& Vertex::GetPoint() const {
@@ -95,10 +90,6 @@ long double Vertex::GetTextureY() const {
 
 const Image* Vertex::GetTexturePointer() const {
     return texture_;
-}
-
-const Vector4& Vertex::GetNormal() const {
-    return normal_;
 }
 
 long double Vertex::GetBrightness() const {

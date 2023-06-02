@@ -2,8 +2,8 @@
 
 namespace rend {
 
-static unsigned int default_color_value = 255;
-static long double default_z_value = 1e18;
+static constexpr unsigned int default_color_value = 255;
+static constexpr long double default_z_value = 1e18;
 
 Screen::Screen() {
     color_buffer_.assign(k_screen_width_ * k_screen_height_, default_color_value);

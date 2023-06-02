@@ -15,12 +15,12 @@ void Space::AddColor(uint32_t color) {
     colors_.push_back(color);
 }
 
-Vector4 Space::NormalizeVector(const Vector4& vec) {
+static Vector4 NormalizeVector(const Vector4& vec) {
     long double length = std::sqrt(vec(0) * vec(0) + vec(1) * vec(1) + vec(2) * vec(2));
     if (length == 0) {
         length = 1;
     }
-    return {vec(0) / length, vec(1) / length, vec(2) / length, vec(3)};
+    return {vec(0) / length, vec(1) / length, vec(2) / length, 1};
 }
 
 void Space::AddNormal(const Vector4& normal) {
@@ -118,6 +118,21 @@ const Vector4& Space::GetNormal(unsigned int index) const {
 
 const Space::Polygon& Space::GetPolygon(unsigned int index) const {
     return polygons_[index];
+}
+
+Vertex Space::CreateVertex(unsigned int polygon_index, unsigned int vertex_index) const {
+    const Polygon& poly = GetPolygon(polygon_index);
+    Vertex result;
+    if (poly.texture_index) {
+        result = Vertex(GetPoint(poly.point_indexes[vertex_index]),
+                        GetTexCoords(poly.tex_coords_indexes[vertex_index]),
+                        GetTexturePointer(poly.texture_index));
+    } else {
+        result = Vertex(GetPoint(poly.point_indexes[vertex_index]),
+                        GetColor(poly.colors_indexes[vertex_index]));
+    }
+    result.SetNormal(GetNormal(poly.normal_indexes[vertex_index]));
+    return result;
 }
 
 void Space::TransformAll(const Matrix4& transformation_matrix) {

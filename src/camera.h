@@ -4,8 +4,8 @@
 
 namespace rend {
 
-static long double default_near_clip_distance = 0.01;
-static long double default_clip_distance = 1000.0;
+static constexpr long double default_near_clip_distance = 0.01;
+static constexpr long double default_clip_distance = 1000.0;
 
 class Camera : public Pivot {
 public:

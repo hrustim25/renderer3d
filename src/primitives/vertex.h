@@ -20,7 +20,6 @@ public:
     void SetTextureCoordinates(long double tex_x, long double tex_y);
     void SetTexturePointer(const Image* texture);
     void SetNormal(const Vector4& normal);
-    void SetBrightness(long double brightness);
 
     const Point4& GetPoint() const;
     uint32_t GetColor() const;
@@ -29,17 +28,13 @@ public:
     long double GetTextureX() const;
     long double GetTextureY() const;
     const Image* GetTexturePointer() const;
-    const Vector4& GetNormal() const;
     long double GetBrightness() const;
-
-    static Vector4 GetLightDirection();
 
 private:
     Point4 point_;
     uint32_t color_ = 0;  // r, g, b, a
     long double tex_x_ = 0;
     long double tex_y_ = 0;
-    Vector4 normal_;
     long double brightness_ = 1;
 
     const Image* texture_ = nullptr;

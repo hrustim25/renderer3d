@@ -32,11 +32,11 @@ public:
     void ReadImage(const std::string& filename);
 
 private:
-    void ReadJpg(const std::string& filename);
+    size_t GetActualArrayPosition(int x, int y) const;
 
-    void ReadPng(const std::string& filename);
-
-    std::vector<std::vector<RGB>> data_;
+    size_t width_ = 0;
+    size_t height_ = 0;
+    std::vector<RGB> data_;
 };
 
 }  // namespace rend

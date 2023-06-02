@@ -2,6 +2,9 @@
 
 namespace rend {
 
+static constexpr long double k_camera_move_step = 0.5;
+static constexpr long double k_camera_rotation_degree = 0.01;
+
 BaseApplication::BaseApplication()
     : space_(),
       renderer_(),
@@ -25,8 +28,7 @@ void BaseApplication::Start() {
         HandleSfmlEvents();
         UpdateScene();
         const Screen& screen = renderer_.DrawScene(space_, camera_);
-        sf::VertexArray result = ConvertScreenToVertexArray(screen);
-        window_.draw(result);
+        window_.draw(ConvertScreenToVertexArray(screen));
         window_.display();
     }
 }
@@ -47,28 +49,36 @@ Matrix4 BaseApplication::GetKeyboardChange(sf::Keyboard::Key key) const {
     Matrix4 change_matrix = CreateIdentityMatrix<4>();
     switch (key) {
         case sf::Keyboard::W:
-            change_matrix = CreateMoveMatrix(0, 0, -0.5);
+            // move forward
+            change_matrix = CreateMoveMatrix(0, 0, -k_camera_move_step);
             break;
         case sf::Keyboard::S:
-            change_matrix = CreateMoveMatrix(0, 0, 0.5);
+            // move backward
+            change_matrix = CreateMoveMatrix(0, 0, k_camera_move_step);
             break;
         case sf::Keyboard::A:
-            change_matrix = CreateMoveMatrix(0.5, 0, 0);
+            // move left
+            change_matrix = CreateMoveMatrix(k_camera_move_step, 0, 0);
             break;
         case sf::Keyboard::D:
-            change_matrix = CreateMoveMatrix(-0.5, 0, 0);
+            // move right
+            change_matrix = CreateMoveMatrix(-k_camera_move_step, 0, 0);
             break;
         case sf::Keyboard::Left:
-            change_matrix = CreateRotationMatrix(1, -3.141592 / 120);
+            // left horizontal rotation
+            change_matrix = CreateRotationMatrix(1, -k_camera_rotation_degree);
             break;
         case sf::Keyboard::Right:
-            change_matrix = CreateRotationMatrix(1, 3.141592 / 120);
+            // right horizontal rotation
+            change_matrix = CreateRotationMatrix(1, k_camera_rotation_degree);
             break;
         case sf::Keyboard::Up:
-            change_matrix = CreateRotationMatrix(2, -3.141592 / 120);
+            // up vertical rotation
+            change_matrix = CreateRotationMatrix(2, k_camera_rotation_degree);
             break;
         case sf::Keyboard::Down:
-            change_matrix = CreateRotationMatrix(2, 3.141592 / 120);
+            // down vertical rotation
+            change_matrix = CreateRotationMatrix(2, -k_camera_rotation_degree);
             break;
         default:
             break;

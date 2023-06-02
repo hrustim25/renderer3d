@@ -1,6 +1,6 @@
 # 3D Renderer
 
-Simple software 3d-renderer written from scratch in C++ using SFML graphics library. Library is used only for primitive actions, such as draw pixels. Renderer supports surface color interpolation, textures mapping (from jpg/jpeg images), Gouraud shading, implements .obj model file parser. Camera can be controlled using: W, A, S, D - for moving forward, left, backward, right and Up, Down, Left, Right arrows - for rotating up, down, left, right respectively.
+Simple software 3d-renderer written from scratch in C++ using SFML graphics library. Library is used only for primitive actions, such as draw pixels. Renderer supports surface color interpolation, textures mapping, Gouraud shading, implements .obj model file parser. Camera can be controlled using: W, A, S, D - for moving forward, left, backward, right and Up, Down, Left, Right arrows - for rotating up, down, left, right respectively.
 
 ## Setup
 

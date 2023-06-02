@@ -1,6 +1,6 @@
 #pragma once
 
-#include "primitives/point.h"
+#include "primitives/vertex.h"
 #include "image.h"
 
 #include <vector>
@@ -36,22 +36,7 @@ public:
     void SetPolygonNormals(unsigned int polygon_index, unsigned int normal_index1,
                            unsigned int normal_index2, unsigned int normal_index3);
 
-    void SetPoint(unsigned int index, const Point4& point);
-    const Point4& GetPoint(unsigned int index) const;
-
-    void SetColor(unsigned int index, uint32_t color);
-    uint32_t GetColor(unsigned int index) const;
-
-    void SetTexCoords(unsigned int index, long double tex_x, long double tex_y);
-    std::pair<long double, long double> GetTexCoords(unsigned int index) const;
-
-    void SetTexture(unsigned int index, const Image& texture);
-    const Image* GetTexturePointer(unsigned int index) const;
-
-    void SetNormal(unsigned int index, const Vector4& normal);
-    const Vector4& GetNormal(unsigned int index) const;
-
-    const Polygon& GetPolygon(unsigned int index) const;
+    Vertex CreateVertex(unsigned int polygon_index, unsigned int vertex_index) const;
 
     void TransformAll(const Matrix4& transformation_matrix);
 
@@ -63,7 +48,18 @@ public:
     size_t GetPolygonCount() const;
 
 private:
-    Vector4 NormalizeVector(const Vector4& vec);
+    const Point4& GetPoint(unsigned int index) const;
+    uint32_t GetColor(unsigned int index) const;
+    std::pair<long double, long double> GetTexCoords(unsigned int index) const;
+    const Image* GetTexturePointer(unsigned int index) const;
+    const Vector4& GetNormal(unsigned int index) const;
+    const Polygon& GetPolygon(unsigned int index) const;
+
+    void SetPoint(unsigned int index, const Point4& point);
+    void SetColor(unsigned int index, uint32_t color);
+    void SetTexCoords(unsigned int index, long double tex_x, long double tex_y);
+    void SetTexture(unsigned int index, const Image& texture);
+    void SetNormal(unsigned int index, const Vector4& normal);
 
     std::vector<Point4> points_;
     std::vector<uint32_t> colors_;

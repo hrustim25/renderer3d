@@ -13,18 +13,9 @@ const Screen& Renderer::GetScreen() const {
 const Screen& Renderer::DrawScene(const Space& space, const Camera& camera) {
     rasterizer_.ClearScreen();
     for (size_t i = 0; i < space.GetPolygonCount(); ++i) {
-        const Space::Polygon& polygon = space.GetPolygon(i);
         Vertex vs[3];
         for (size_t j = 0; j < 3; ++j) {
-            if (polygon.texture_index) {
-                vs[j] = Vertex(space.GetPoint(polygon.point_indexes[j]),
-                               space.GetTexCoords(polygon.tex_coords_indexes[j]),
-                               space.GetTexturePointer(polygon.texture_index));
-            } else {
-                vs[j] = Vertex(space.GetPoint(polygon.point_indexes[j]),
-                               space.GetColor(polygon.colors_indexes[j]));
-            }
-            vs[j].SetNormal(space.GetNormal(polygon.normal_indexes[j]));
+            vs[j] = space.CreateVertex(i, j);
         }
         DrawPolygon(vs[0], vs[1], vs[2], camera);
     }

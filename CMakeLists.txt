@@ -10,13 +10,10 @@ find_package(SFML 2.5
     COMPONENTS
         system window graphics REQUIRED)
 
-find_package(JPEG 1.2)
-find_package(PNG 1.6)
-
 include_directories(src)
 add_subdirectory(src)
 
-set(TESTS_INCLUDE_LIBRARIES files primitives sfml-graphics sfml-window sfml-system JPEG::JPEG PNG::PNG)
+set(TESTS_INCLUDE_LIBRARIES files primitives sfml-graphics sfml-window sfml-system)
 
 add_executable(test_cube test/test_cube.cpp)
 target_link_libraries(test_cube ${TESTS_INCLUDE_LIBRARIES})
